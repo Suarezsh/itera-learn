@@ -1,0 +1,1911 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo 1: Errores | ITERA Learn</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23c2410c'/%3E%3Cpath d='M5 20c3 0 4-9 7-9s4 10 7 10 4-7 8-7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<style>
+:root{
+  --bg:#fbfaf7;--surface:#fff;--surface-2:#f4f1ea;
+  --ink:#14212e;--ink-2:#3b4a5a;--muted:#5f6c78;--line:#e6e0d4;
+  --accent:#c2410c;--accent-h:#9a3412;--accent-soft:#fdeee4;--accent-bright:#f4581c;--on-accent:#fff;
+  --ok:#2f7a5b;--ok-soft:#e5f2ec;--ok-dark:#1a4731;
+  --warn:#d97706;--warn-soft:#fef3c7;
+  --err:#dc2626;--err-soft:#fee2e2;
+  --navy:#14212e;
+  --r:12px;--rl:18px;
+  --sh:0 1px 3px rgba(20,33,46,.06),0 8px 24px rgba(20,33,46,.08);
+  --sw:260px;--hh:60px;
+  --fb:"Inter",system-ui,sans-serif;
+  --fh:"Manrope","Inter",system-ui,sans-serif;
+  --fm:"JetBrains Mono",ui-monospace,monospace;
+}
+[data-theme=dark]{
+  --bg:#0f1720;--surface:#16212c;--surface-2:#1c2935;
+  --ink:#e8eef3;--ink-2:#c3cfd9;--muted:#97a6b4;--line:#2a3846;
+  --accent:#fb8a5a;--accent-h:#ffa47e;--accent-soft:#2c1e17;--accent-bright:#fb7c46;--on-accent:#1a0f08;
+  --ok:#5cc29a;--ok-soft:#14302a;--ok-dark:#86efac;
+  --warn:#fbbf24;--warn-soft:#2d2008;
+  --err:#f87171;--err-soft:#2d1515;
+  --sh:0 1px 3px rgba(0,0,0,.3),0 8px 24px rgba(0,0,0,.2);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);font-size:16px;line-height:1.65;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:var(--fh);line-height:1.2}
+a{color:var(--accent);text-decoration:none}
+ul,ol{list-style:none}
+button,input,select{font:inherit;color:inherit}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:100;height:var(--hh);background:var(--surface);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 20px;gap:14px}
+.back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);white-space:nowrap;transition:color .15s}
+.back:hover{color:var(--accent)}
+.htitle{flex:1;min-width:0;font:700 15px var(--fh);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.htitle em{color:var(--accent);font-style:normal}
+.prog-wrap{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);white-space:nowrap}
+.prog-track{width:110px;height:6px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+.prog-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .4s ease;width:0%}
+.theme-btn{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;display:grid;place-items:center;font-size:14px;color:var(--muted);transition:color .15s,border-color .15s}
+.theme-btn:hover{color:var(--accent);border-color:var(--accent)}
+
+/* LAYOUT */
+.body{display:flex}
+.sidebar{width:var(--sw);flex:none;position:sticky;top:var(--hh);height:calc(100vh - var(--hh));overflow-y:auto;border-right:1px solid var(--line);padding:14px 10px;display:flex;flex-direction:column;gap:3px;background:var(--surface)}
+.sb-title{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:4px 8px 10px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:10px;font-size:13.5px;color:var(--ink-2);cursor:pointer;transition:background .15s,color .15s;text-decoration:none;border:none;background:none;width:100%;text-align:left}
+.nav-item:hover{background:var(--surface-2);color:var(--ink)}
+.nav-item.active{background:var(--accent-soft);color:var(--accent)}
+.nav-item.done{color:var(--ok)}
+.nav-chk{flex:none;width:22px;height:22px;border-radius:6px;background:var(--surface-2);display:grid;place-items:center;font-size:10px;color:var(--muted);border:1px solid var(--line);font-family:var(--fm);font-weight:600}
+.nav-item.done .nav-chk{background:var(--ok);border-color:var(--ok);color:#fff}
+.sb-sep{height:1px;background:var(--line);margin:8px 4px}
+.sb-exam{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0;padding:10px;border-radius:10px;background:var(--accent);color:var(--on-accent);border:none;cursor:pointer;font-weight:700;font-size:13px;transition:background .2s;text-decoration:none}
+.sb-exam:hover{background:var(--accent-h);color:var(--on-accent)}
+.sb-score{font-size:12px;color:var(--muted);text-align:center;padding:4px 8px}
+
+/* MAIN */
+.main{flex:1;min-width:0;max-width:800px;padding:32px 28px 100px}
+
+/* SECTION */
+.ls{margin-bottom:52px;scroll-margin-top:calc(var(--hh) + 20px)}
+.sh{display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.snum{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font:700 14px var(--fm)}
+.snum.done{background:var(--ok-soft);color:var(--ok)}
+.stitle{font-size:1.45rem;font-weight:800}
+.ssub{font-size:13px;color:var(--muted);margin-top:2px}
+
+/* THEORY */
+.th p{color:var(--ink-2);margin-bottom:14px;font-size:15.5px}
+.th p:last-child{margin-bottom:0}
+.th ul,.th ol{margin:10px 0 14px 20px;color:var(--ink-2);font-size:15px}
+.th li{margin-bottom:6px}
+.th ul li{list-style:disc}
+.th ol li{list-style:decimal}
+
+/* FORMULA BOX */
+.fbox{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:var(--r);padding:16px 20px;margin:16px 0;overflow-x:auto}
+.fbox .flabel{font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+
+/* INFO BOX */
+.ibox{display:flex;gap:12px;padding:14px 16px;border-radius:var(--r);margin:14px 0;font-size:14.5px}
+.ibox p{margin:0;color:var(--ink-2)}
+.ibox.tip{background:var(--ok-soft);border:1px solid rgba(47,122,91,.25)}
+.ibox.tip i{color:var(--ok);margin-top:2px}
+.ibox.warn{background:var(--warn-soft);border:1px solid rgba(217,119,6,.25)}
+.ibox.warn i{color:var(--warn);margin-top:2px}
+.ibox.info{background:var(--accent-soft);border:1px solid rgba(194,65,12,.2)}
+.ibox.info i{color:var(--accent);margin-top:2px}
+
+/* EXAMPLE */
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin:20px 0}
+.ex-head{display:flex;align-items:center;gap:10px;padding:13px 18px;background:var(--surface-2);border-bottom:1px solid var(--line);font-weight:700;font-size:14.5px}
+.ex-head i{color:var(--accent)}
+.ex-body{padding:18px}
+.ex-body p{font-size:15px;color:var(--ink-2);margin-bottom:10px}
+.step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+.step-n{flex:none;width:24px;height:24px;border-radius:999px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:11px;font-weight:700;margin-top:3px}
+.step-c{flex:1;font-size:14.5px;color:var(--ink-2)}
+.ex-res{background:var(--ok-soft);border:1px solid rgba(47,122,91,.25);border-radius:var(--r);padding:12px 16px;margin-top:14px;display:flex;align-items:center;gap:10px;font-size:14.5px}
+.ex-res i{color:var(--ok)}
+.ex-res strong{color:var(--ok)}
+
+/* CALCULATOR */
+.calc{background:var(--surface);border:2px solid var(--accent-soft);border-radius:var(--rl);overflow:hidden;margin:24px 0}
+.calc-head{display:flex;align-items:center;gap:10px;padding:13px 18px;background:var(--accent-soft);font-weight:700;font-size:14.5px;color:var(--accent)}
+.calc-head i{font-size:16px}
+.calc-body{padding:20px;display:grid;gap:14px}
+.crow{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:13px;font-weight:600;color:var(--ink-2)}
+.field input,.field select{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-size:15px;transition:border-color .15s}
+.field input:focus,.field select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.cbtn{padding:11px 22px;border:none;border-radius:10px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:14px;cursor:pointer;transition:background .2s;justify-self:start}
+.cbtn:hover{background:var(--accent-h)}
+.cres{background:var(--surface-2);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:none}
+.cres.show{display:block}
+.rrow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
+.rrow:last-child{border:none}
+.rl{color:var(--muted)}
+.rv{font-family:var(--fm);font-weight:600}
+.rv.g{color:var(--ok)}
+.rv.w{color:var(--warn)}
+
+/* CODE */
+pre[class*=language-]{border-radius:var(--r);margin:14px 0;font-size:13px}
+
+/* CHART */
+.chart-title{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px}
+
+/* QUIZ */
+.qbox{background:var(--surface);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin:32px 0}
+.qhead{display:flex;align-items:center;justify-content:space-between;padding:13px 20px;background:var(--surface-2);border-bottom:1px solid var(--line)}
+.qhead-l{display:flex;align-items:center;gap:10px;font-weight:700;font-size:14.5px}
+.qhead-l i{color:var(--accent)}
+.qbadge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--surface);border:1px solid var(--line)}
+.qbody{padding:20px}
+.qblock{margin-bottom:24px}
+.qblock:last-of-type{margin-bottom:0}
+.qtxt{font-weight:600;font-size:15px;margin-bottom:12px}
+.qnum{color:var(--muted);font-weight:400;margin-right:4px}
+.opts{display:grid;gap:7px}
+.opt{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1.5px solid var(--line);border-radius:10px;cursor:pointer;transition:border-color .15s,background .15s;font-size:14.5px;background:var(--bg);user-select:none}
+.opt:hover:not(.disabled){border-color:var(--accent);background:var(--accent-soft)}
+.opt-l{flex:none;width:24px;height:24px;border-radius:6px;border:1.5px solid var(--line);background:var(--surface);display:grid;place-items:center;font-size:11px;font-weight:700;color:var(--muted)}
+.opt.sel{border-color:var(--accent);background:var(--accent-soft)}
+.opt.sel .opt-l{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.opt.cor{border-color:var(--ok)!important;background:var(--ok-soft)!important}
+.opt.cor .opt-l{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrn{border-color:var(--err)!important;background:var(--err-soft)!important}
+.opt.wrn .opt-l{background:var(--err);border-color:var(--err);color:#fff}
+.opt.disabled{cursor:default}
+.fb{display:none;margin-top:10px;padding:12px 14px;border-radius:10px;font-size:14px;gap:10px}
+.fb.show{display:flex}
+.fb.cor{background:var(--ok-soft);color:var(--ok-dark)}
+.fb.wrn{background:var(--err-soft);color:#991b1b}
+[data-theme=dark] .fb.wrn{color:#fca5a5}
+[data-theme=dark] .fb.cor{color:#86efac}
+.fb i{flex:none;margin-top:2px}
+.qbtn{display:flex;align-items:center;gap:8px;margin-top:16px;padding:10px 20px;border:none;border-radius:10px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:14px;cursor:pointer;transition:background .2s}
+.qbtn:hover{background:var(--accent-h)}
+.qbtn:disabled{opacity:.45;cursor:default}
+.qdone{display:none;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;margin-top:14px;font-weight:600;font-size:14px}
+.qdone.show{display:flex}
+.qdone.p{background:var(--ok-soft);color:var(--ok)}
+.qdone.g{background:var(--warn-soft);color:var(--warn)}
+.qdone.r{background:var(--err-soft);color:var(--err)}
+
+/* EXAM */
+.exambox{background:var(--surface);border:2px solid var(--accent);border-radius:var(--rl);overflow:hidden;margin:48px 0;scroll-margin-top:calc(var(--hh) + 20px)}
+.exam-hd{display:flex;align-items:center;gap:14px;padding:20px 24px;background:var(--accent);color:var(--on-accent)}
+.exam-hd .ico{font-size:26px}
+.exam-hd h2{font-size:1.25rem;font-weight:800;margin-bottom:2px}
+.exam-hd p{font-size:13.5px;opacity:.85}
+.exam-body{padding:24px}
+.eprog{display:flex;align-items:center;gap:12px;margin-bottom:24px;font-size:13px;color:var(--muted)}
+.eprog-track{flex:1;height:6px;background:var(--surface-2);border-radius:999px;overflow:hidden}
+.eprog-fill{height:100%;background:var(--accent);border-radius:999px;transition:width .3s}
+.eq{font-weight:700;font-size:17px;margin-bottom:18px}
+.eqn{font-size:12px;font-weight:400;color:var(--muted);display:block;margin-bottom:6px}
+.enav{display:flex;justify-content:space-between;align-items:center;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.ebtn{display:flex;align-items:center;gap:8px;padding:10px 20px;border:none;border-radius:10px;font-weight:700;font-size:14px;cursor:pointer;transition:background .2s}
+.ebtn.p{background:var(--accent);color:var(--on-accent)}
+.ebtn.p:hover{background:var(--accent-h)}
+.ebtn.s{background:var(--surface-2);color:var(--ink);border:1px solid var(--line)}
+.ebtn.s:hover{border-color:var(--accent);color:var(--accent)}
+.ebtn:disabled{opacity:.4;cursor:default}
+.eresults{display:none}
+.eresults.show{display:block}
+.score-wrap{text-align:center;padding:32px 20px}
+.score-circle{width:120px;height:120px;border-radius:50%;border:5px solid var(--accent);display:grid;place-items:center;margin:0 auto 14px;font:800 2.4rem var(--fh);color:var(--accent)}
+.score-circle.p{border-color:var(--ok);color:var(--ok)}
+.score-circle.f{border-color:var(--err);color:var(--err)}
+.score-label{font-size:14.5px;color:var(--muted)}
+.score-label strong{color:var(--ink);display:block;font-size:1.05rem;margin-bottom:4px}
+.ereview{margin-top:24px}
+.ereview h3{font-size:1.05rem;font-weight:700;margin-bottom:14px}
+.ri{border:1px solid var(--line);border-radius:var(--r);overflow:hidden;margin-bottom:10px}
+.ri-head{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;background:var(--surface-2);font-size:14px;font-weight:600}
+.ri-head .ico{font-size:15px;margin-top:1px}
+.ri-head .ico.ok{color:var(--ok)}
+.ri-head .ico.err{color:var(--err)}
+.ri-exp{padding:12px 16px;font-size:14px;color:var(--ink-2);border-top:1px solid var(--line)}
+.retry-btn{display:flex;align-items:center;gap:8px;margin:20px auto 0;padding:12px 28px;border:none;border-radius:12px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:15px;cursor:pointer;transition:background .2s}
+.retry-btn:hover{background:var(--accent-h)}
+
+.study-resource{max-width:1000px;margin:0 0 48px;scroll-margin-top:calc(var(--hh) + 20px)}
+#formulas{max-width:none}
+.study-resource h2{margin-bottom:10px}
+.study-resource>p{color:var(--ink-2);margin-bottom:16px}
+.video-player{display:block;width:100%;max-width:800px;aspect-ratio:16/9;border:0;border-radius:var(--rl);background:var(--navy);margin-bottom:16px}
+.video-link{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;background:var(--accent);color:var(--on-accent);font-weight:700}
+.video-link:hover{background:var(--accent-h)}
+.formula-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:14px}
+.formula-grid .fbox{margin:0;min-width:0}
+.formula-grid h3{font-size:16px;margin-bottom:8px}
+.formula-grid p{font-size:14px;color:var(--ink-2)}
+
+[hidden]{display:none!important}
+.locked{opacity:.5}
+.topics-btn,.exam-number{border:1px solid var(--line);border-radius:8px;background:var(--surface-2);padding:5px 8px}
+.topics-btn{display:none;cursor:pointer}
+.exam-number{display:block;width:min(100%,16rem);margin-top:8px}
+.opt{text-align:left}
+.calc-status{font-size:14px;color:var(--ink-2);border-left:3px solid var(--accent);padding-left:10px}
+.module-chart figcaption{font-weight:700;font-size:14px;margin-bottom:6px}
+.module-chart>div{height:210px;position:relative;min-width:0}
+.calc-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.sample-btn{border:1px solid var(--line);border-radius:8px;padding:6px 10px;background:var(--surface);cursor:pointer;font-size:14px}
+
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+
+@media(min-width:1120px){
+  .main{max-width:1340px}
+  .main:has(>#formulas:not([hidden])){max-width:none}
+  .ls{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);column-gap:clamp(24px,2.5vw,40px);align-items:start}
+  .ls>.sh{grid-column:1/-1}
+  .ls>.qbox{margin:0}
+  .exambox{max-width:800px}
+}
+@media(max-width:768px){
+  .hdr{padding-inline:12px;gap:8px}
+  .prog-track{display:none}
+  .topics-btn{display:block}
+  .sidebar{display:none;position:fixed;z-index:99;top:var(--hh);left:0;width:min(310px,100%);height:auto;max-height:calc(100dvh - var(--hh));box-shadow:var(--sh)}
+  .hdr:has(#topics-btn[aria-expanded="true"])+.body .sidebar{display:flex}
+  .main{padding:20px 16px 80px}
+  .crow{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
+.katex{font-size:1.05em}
+.katex-display{overflow-x:auto;padding:4px 0}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <a href="../index.html" class="back"><i class="fa-solid fa-arrow-left"></i> ITERA</a>
+  <div class="htitle">Módulo 1 · <em>Errores</em></div>
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" id="main-prog"></div></div>
+    <span id="prog-label" aria-live="polite">0 de 8 temas</span>
+  </div>
+  <button class="topics-btn" id="topics-btn" aria-controls="module-topics" aria-expanded="false"
+    onclick="this.setAttribute('aria-expanded', this.getAttribute('aria-expanded') === 'false')">Temas</button>
+  <button class="theme-btn" id="theme-btn" title="Cambiar tema" aria-label="Cambiar tema"><i class="fa-solid fa-moon"></i></button>
+</header>
+
+<div class="body">
+<aside class="sidebar" id="module-topics">
+  <div class="sb-title">Contenido del módulo</div>
+  <a href="#s1" class="nav-item" data-sid="s1"><span class="nav-chk" id="chk-s1">1</span><span>Introducción</span></a>
+  <a href="#s2" class="nav-item locked" data-sid="s2" inert><span class="nav-chk" id="chk-s2">2</span><span>Números aproximados y redondeo</span></a>
+  <a href="#s3" class="nav-item locked" data-sid="s3" inert><span class="nav-chk" id="chk-s3">3</span><span>Error absoluto y relativo</span></a>
+  <a href="#s4" class="nav-item locked" data-sid="s4" inert><span class="nav-chk" id="chk-s4">4</span><span>Clasificación de errores</span></a>
+  <a href="#s5" class="nav-item locked" data-sid="s5" inert><span class="nav-chk" id="chk-s5">5</span><span>Cifras significativas</span></a>
+  <a href="#s6" class="nav-item locked" data-sid="s6" inert><span class="nav-chk" id="chk-s6">6</span><span>Propagación de errores</span></a>
+  <a href="#s7" class="nav-item locked" data-sid="s7" inert><span class="nav-chk" id="chk-s7">7</span><span>Condicionamiento</span></a>
+  <a href="#s8" class="nav-item locked" data-sid="s8" inert><span class="nav-chk" id="chk-s8">8</span><span>Convergencia</span></a>
+  <div class="sb-sep"></div>
+  <a href="#exam" class="sb-exam locked" inert><i class="fa-solid fa-scroll"></i> Examen Final</a>
+  <div class="sb-score" id="sb-score"></div>
+  <div class="sb-sep"></div>
+  <div class="sb-title">Recursos libres</div>
+  <a href="#video" class="nav-item"><span class="nav-chk"><i class="fa-solid fa-play" aria-hidden="true"></i></span><span>Video</span></a>
+  <a href="#formulas" class="nav-item"><span class="nav-chk"><i class="fa-solid fa-square-root-variable" aria-hidden="true"></i></span><span>Fórmulas</span></a>
+</aside>
+
+<main class="main">
+
+<!-- ══════════════════════════════════════
+     SECCIÓN 1: INTRODUCCIÓN
+══════════════════════════════════════ -->
+<section class="ls" id="s1">
+  <div class="sh">
+    <div class="snum" id="snum-s1">1</div>
+    <div>
+      <h2 class="stitle">Introducción a los Métodos Numéricos</h2>
+      <p class="ssub">1.1 · 1.2 · 1.3 — Conceptos fundamentales</p>
+    </div>
+  </div>
+  <div class="lesson-content">
+  <div class="th">
+    <p>Los <strong>métodos numéricos</strong> son técnicas mediante las cuales se formulan y resuelven problemas matemáticos con operaciones aritméticas. Producen soluciones <em>aproximadas</em>, no exactas, y esa aproximación es inevitable y cuantificable.</p>
+    <p>¿Por qué usarlos? Muchos problemas reales no tienen solución analítica cerrada: ecuaciones no lineales, integrales complejas, sistemas de ecuaciones grandes, ecuaciones diferenciales con condiciones de frontera complicadas. Para todos esos casos, los métodos numéricos son la herramienta principal.</p>
+    <div class="ibox info"><i class="fa-solid fa-lightbulb"></i><p><strong>Aplicación en Ingeniería de Sistemas:</strong> los algoritmos de búsqueda, aprendizaje automático, simulación de redes y optimización de recursos usan métodos numéricos en su núcleo.</p></div>
+    <p>El uso de la computadora introduce dos consecuencias:</p>
+    <ul>
+      <li>Los números se representan con <strong>precisión finita</strong> (punto flotante), generando pequeños errores en cada operación.</li>
+      <li>Los procesos infinitos (series, iteraciones) se <strong>truncan</strong> después de un número finito de pasos.</li>
+    </ul>
+    <p>Por eso, el <strong>análisis del error</strong> es el primer tema: antes de usar un método, necesitas saber qué tan confiable es su resultado.</p>
+    <div class="ibox info"><i class="fa-solid fa-route" aria-hidden="true"></i><p>Acierta todas las preguntas de cada tema para abrir el siguiente. Cada intento usa un nuevo orden y, cuando corresponde, nuevos datos.</p></div>
+  </div>
+  </div>
+
+  <!-- QUIZ 1 -->
+  <div class="qbox" id="quiz-s1">
+    <div class="qhead">
+      <div class="qhead-l"><i class="fa-solid fa-circle-question"></i> Preguntas rápidas — Sección 1</div>
+      <span class="qbadge" id="qbadge-s1">0 / 2</span>
+    </div>
+    <div class="qbody" id="qbody-s1"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECCIÓN 2: NÚMEROS APROXIMADOS Y REDONDEO
+══════════════════════════════════════ -->
+<section class="ls" id="s2" hidden>
+  <div class="sh">
+    <div class="snum" id="snum-s2">2</div>
+    <div>
+      <h2 class="stitle">Números exactos y aproximados · Redondeo</h2>
+      <p class="ssub">1.4 · 1.5 — Representación y redondeo</p>
+    </div>
+  </div>
+  <div class="lesson-content">
+  <div class="th">
+    <p>Un <strong>número exacto</strong> es el que resulta de un conteo o una operación algebraica exacta. Un <strong>número aproximado</strong> es el que proviene de una medición, de una representación truncada o de un cálculo con precisión finita.</p>
+    <p>Existen dos formas de reducir dígitos:</p>
+    <ul>
+      <li><strong>Truncamiento:</strong> se eliminan los dígitos a la derecha de la posición deseada sin ningún ajuste. Siempre introduce error en la misma dirección.</li>
+      <li><strong>Redondeo:</strong> se mira el dígito siguiente; si es ≥ 5, el último dígito conservado aumenta en 1; si es &lt; 5, se conserva igual.</li>
+    </ul>
+    <div class="fbox">
+      <div class="flabel">Regla de redondeo</div>
+      <p>Si \(x = d_1 d_2 \ldots d_n \, d_{n+1} \ldots\) y se redondea a \(n\) decimales:</p>
+      \[\tilde{x} = \begin{cases} d_1 d_2 \ldots d_n + 1 & \text{si } d_{n+1} \geq 5 \\ d_1 d_2 \ldots d_n & \text{si } d_{n+1} < 5 \end{cases}\]
+    </div>
+    <div class="ibox warn"><i class="fa-solid fa-triangle-exclamation"></i><p><strong>Cancelación catastrófica:</strong> restar dos números aproximados casi iguales puede eliminar la mayoría de las cifras significativas y amplificar enormemente el error relativo.</p></div>
+  </div>
+
+  <!-- CALCULADORA: Redondeo -->
+  <div class="calc">
+    <div class="calc-head"><i class="fa-solid fa-calculator"></i> Calculadora — Redondeo y truncamiento</div>
+    <div class="calc-body">
+      <div class="crow">
+        <div class="field"><label for="c-round-num">Número</label><input type="number" id="c-round-num" placeholder="Ej: 3.14159265" step="any"></div>
+        <div class="field"><label for="c-round-dec">Decimales a conservar</label><input type="number" id="c-round-dec" placeholder="Ej: 3" min="0" max="10" value="3"></div>
+      </div>
+      <div class="calc-actions"><button class="cbtn" onclick="calcRound()">Calcular</button> <button class="sample-btn" data-example="round">Probar ejemplo</button></div>
+      <p class="calc-status" id="status-round" role="status" hidden></p>
+      <div class="cres" id="res-round">
+        <div class="rrow"><span class="rl">Número original</span><span class="rv" id="rr-orig"></span></div>
+        <div class="rrow"><span class="rl">Truncado</span><span class="rv" id="rr-trunc"></span></div>
+        <div class="rrow"><span class="rl">Redondeado</span><span class="rv g" id="rr-round"></span></div>
+        <div class="rrow"><span class="rl">Error de truncamiento</span><span class="rv w" id="rr-etrunc"></span></div>
+        <div class="rrow"><span class="rl">Error de redondeo</span><span class="rv" id="rr-eround"></span></div>
+      </div>
+      <figure class="module-chart" id="chart-round" hidden>
+        <figcaption></figcaption>
+        <div><canvas aria-hidden="true"></canvas></div>
+      </figure>
+    </div>
+  </div>
+  </div>
+
+  <div class="qbox" id="quiz-s2">
+    <div class="qhead">
+      <div class="qhead-l"><i class="fa-solid fa-circle-question"></i> Preguntas rápidas — Sección 2</div>
+      <span class="qbadge" id="qbadge-s2">0 / 2</span>
+    </div>
+    <div class="qbody" id="qbody-s2"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECCIÓN 3: ERROR ABSOLUTO Y RELATIVO
+══════════════════════════════════════ -->
+<section class="ls" id="s3" hidden>
+  <div class="sh">
+    <div class="snum" id="snum-s3">3</div>
+    <div>
+      <h2 class="stitle">Error absoluto y relativo</h2>
+      <p class="ssub">1.6 — Medición del error</p>
+    </div>
+  </div>
+  <div class="lesson-content">
+  <div class="th">
+    <p>Para cuantificar cuán lejos está una aproximación del valor verdadero se definen tres medidas:</p>
+    <div class="fbox">
+      <div class="flabel">Definiciones fundamentales</div>
+      \[E_a = |x_v - x_a| \qquad \text{(Error absoluto)}\]
+      \[E_r = \frac{E_a}{|x_v|} \qquad \text{(Error relativo)}\]
+      \[E_\% = E_r \times 100\% \qquad \text{(Error porcentual)}\]
+    </div>
+    <p>donde \(x_v\) es el valor verdadero y \(x_a\) es el valor aproximado.</p>
+    <div class="ibox tip"><i class="fa-solid fa-circle-info"></i><p>En la práctica, el valor verdadero casi nunca se conoce. Se usa una <strong>estimación del error</strong> comparando iteraciones sucesivas: \(\varepsilon_a = \left|\frac{x_{n+1}-x_n}{x_{n+1}}\right| \times 100\%\)</p></div>
+  </div>
+
+  <!-- EJEMPLO -->
+  <div class="ex">
+    <div class="ex-head"><i class="fa-solid fa-pen-to-square"></i> Ejemplo resuelto — Aproximar π</div>
+    <div class="ex-body">
+      <p>Calcula los errores al aproximar \(\pi \approx 3.14159\) con \(x_a = 3.14\).</p>
+      <div class="step"><div class="step-n">1</div><div class="step-c">Valor verdadero: \(x_v = \pi = 3.14159265...\), Aproximado: \(x_a = 3.14\)</div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-c">Error absoluto: \(E_a = |3.14159... - 3.14| = 0.00159...\)</div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-c">Error relativo: \(E_r = \dfrac{0.00159...}{3.14159...} = 0.000506...\)</div></div>
+      <div class="step"><div class="step-n">4</div><div class="step-c">Error porcentual: \(E_\% = 0.000506... \times 100\% = 0.0506\%\)</div></div>
+      <div class="ex-res"><i class="fa-solid fa-check-circle"></i><span>La aproximación 3.14 tiene un error de <strong>0.0506%</strong> respecto a π.</span></div>
+    </div>
+  </div>
+
+  <!-- CALCULADORA ERROR -->
+  <div class="calc">
+    <div class="calc-head"><i class="fa-solid fa-bullseye"></i> Calculadora — Error absoluto y relativo</div>
+    <div class="calc-body">
+      <div class="crow">
+        <div class="field"><label for="c-xv">Valor verdadero \(x_v\)</label><input type="number" id="c-xv" placeholder="Ej: 3.14159265" step="any"></div>
+        <div class="field"><label for="c-xa">Valor aproximado \(x_a\)</label><input type="number" id="c-xa" placeholder="Ej: 3.14" step="any"></div>
+      </div>
+      <div class="calc-actions"><button class="cbtn" onclick="calcError()">Calcular errores</button> <button class="sample-btn" data-example="err">Probar ejemplo</button></div>
+      <p class="calc-status" id="status-err" role="status" hidden></p>
+      <div class="cres" id="res-err">
+        <div class="rrow"><span class="rl">Error absoluto \(E_a\)</span><span class="rv" id="re-abs"></span></div>
+        <div class="rrow"><span class="rl">Error relativo \(E_r\)</span><span class="rv" id="re-rel"></span></div>
+        <div class="rrow"><span class="rl">Error porcentual \(E_\%\)</span><span class="rv g" id="re-pct"></span></div>
+        <div class="rrow"><span class="rl">Cifras decimales correctas</span><span class="rv" id="re-dig"></span></div>
+      </div>
+      <figure class="module-chart" id="chart-err" hidden>
+        <figcaption></figcaption>
+        <div><canvas aria-hidden="true"></canvas></div>
+      </figure>
+    </div>
+  </div>
+
+  <!-- CÓDIGO Python -->
+  <details style="margin:16px 0">
+    <summary style="cursor:pointer;font-size:13.5px;color:var(--accent);font-weight:600;padding:8px 0"><i class="fa-brands fa-python"></i> Ver código Python equivalente</summary>
+    <pre><code class="language-python">x_v = 3.14159265  # valor verdadero
+x_a = 3.14        # valor aproximado
+
+e_abs = abs(x_v - x_a)
+e_rel = e_abs / abs(x_v)
+e_pct = e_rel * 100
+
+print(f"Error absoluto:    {e_abs:.8f}")
+print(f"Error relativo:    {e_rel:.8f}")
+print(f"Error porcentual:  {e_pct:.6f}%")</code></pre>
+  </details>
+  </div>
+
+  <div class="qbox" id="quiz-s3">
+    <div class="qhead">
+      <div class="qhead-l"><i class="fa-solid fa-circle-question"></i> Preguntas rápidas — Sección 3</div>
+      <span class="qbadge" id="qbadge-s3">0 / 3</span>
+    </div>
+    <div class="qbody" id="qbody-s3"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECCIÓN 4: CLASIFICACIÓN DE ERRORES
+══════════════════════════════════════ -->
+<section class="ls" id="s4" hidden>
+  <div class="sh">
+    <div class="snum" id="snum-s4">4</div>
+    <div>
+      <h2 class="stitle">Clasificación de los errores</h2>
+      <p class="ssub">1.7 — Tipos y fuentes de error</p>
+    </div>
+  </div>
+  <div class="lesson-content">
+  <div class="th">
+    <p>Los errores en métodos numéricos tienen tres fuentes principales:</p>
+    <ol>
+      <li><strong>Error inherente (o de los datos):</strong> proviene de imprecisiones en los datos de entrada. Las mediciones físicas siempre tienen incertidumbre. Este error no lo introduce el método, ya viene en los datos.</li>
+      <li><strong>Error de truncamiento:</strong> ocurre cuando un proceso matemático <em>infinito</em> se reemplaza por uno <em>finito</em>. Ejemplo: calcular \(e^x = \sum_{n=0}^{\infty}\frac{x^n}{n!}\) y detener la suma en el término \(n=4\).</li>
+      <li><strong>Error de redondeo:</strong> surge de la representación finita de los números en la computadora. Ningún número irracional ni muchos racionales tienen representación exacta en binario de precisión finita.</li>
+    </ol>
+    <div class="fbox">
+      <div class="flabel">Ejemplo: serie de Taylor truncada para e^x</div>
+      \[e^x \approx 1 + x + \frac{x^2}{2!} + \frac{x^3}{3!} + \underbrace{\frac{x^4}{4!}}_{\text{último término}} + \underbrace{R_4(x)}_{\text{error de truncamiento}}\]
+    </div>
+    <div class="ibox warn"><i class="fa-solid fa-triangle-exclamation"></i><p>Los tres tipos de error pueden <strong>acumularse</strong>. Un método que parece preciso puede volverse inestable si el error de redondeo se amplifica en cada iteración.</p></div>
+  </div>
+  </div>
+
+  <div class="qbox" id="quiz-s4">
+    <div class="qhead">
+      <div class="qhead-l"><i class="fa-solid fa-circle-question"></i> Preguntas rápidas — Sección 4</div>
+      <span class="qbadge" id="qbadge-s4">0 / 2</span>
+    </div>
+    <div class="qbody" id="qbody-s4"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECCIÓN 5: CIFRAS SIGNIFICATIVAS
+══════════════════════════════════════ -->
+<section class="ls" id="s5" hidden>
+  <div class="sh">
+    <div class="snum" id="snum-s5">5</div>
+    <div>
+      <h2 class="stitle">Cifras significativas</h2>
+      <p class="ssub">1.8 — Dígitos confiables</p>
+    </div>
+  </div>
+  <div class="lesson-content">
+  <div class="th">
+    <p>Las <strong>cifras significativas</strong> son los dígitos que realmente contienen información sobre la magnitud del número. Las reglas para contarlas son:</p>
+    <ul>
+      <li>Todos los dígitos distintos de cero <strong>son</strong> significativos.</li>
+      <li>Los ceros <em>entre</em> dígitos significativos <strong>son</strong> significativos. Ej: 4003 → 4 c.s.</li>
+      <li>Los ceros a la <em>izquierda</em> del primer dígito distinto de cero <strong>no son</strong> significativos. Ej: 0.00450 → 3 c.s.</li>
+      <li>Los ceros a la <em>derecha</em> del punto decimal <strong>son</strong> significativos. Ej: 2.500 → 4 c.s.</li>
+    </ul>
+    <div class="fbox">
+      <div class="flabel">Relación entre cifras significativas y error relativo</div>
+      <p>Para redondear a \(n\) cifras significativas, cuenta desde el primer dígito distinto de cero y aplica la regla de redondeo a la primera cifra descartada. Por ejemplo, 2.546 a 3 cifras se redondea a 2.55.</p>
+      \[n \text{ c.s.} \quad \Longleftrightarrow \quad E_r \approx 0.5 \times 10^{1-n}\]
+      <p style="font-size:14px;color:var(--muted);margin-top:8px">Ejemplo: 3 c.s. ↔ \(E_r \approx 5 \times 10^{-3} = 0.5\%\)</p>
+    </div>
+  </div>
+
+  <!-- CALCULADORA CIFRAS SIG -->
+  <div class="calc">
+    <div class="calc-head"><i class="fa-solid fa-hashtag"></i> Calculadora — Cifras significativas</div>
+    <div class="calc-body">
+      <div class="field"><label for="c-sig">Número</label><input type="text" id="c-sig" placeholder="Ej: 0.00450  o  1.0030e3" style="max-width:280px"></div>
+      <div class="calc-actions"><button class="cbtn" onclick="calcSig()">Analizar</button> <button class="sample-btn" data-example="sig">Probar ejemplo</button></div>
+      <p class="calc-status" id="status-sig" role="status" hidden></p>
+      <div class="cres" id="res-sig">
+        <div class="rrow"><span class="rl">Cifras significativas</span><span class="rv g" id="rs-count"></span></div>
+        <div class="rrow"><span class="rl">Error relativo estimado</span><span class="rv" id="rs-er"></span></div>
+        <div class="rrow"><span class="rl">Notación científica</span><span class="rv" id="rs-sci"></span></div>
+        <div class="rrow"><span class="rl">Dígitos significativos</span><span class="rv" id="rs-digits"></span></div>
+      </div>
+      <figure class="module-chart" id="chart-sig" hidden>
+        <figcaption></figcaption>
+        <div><canvas aria-hidden="true"></canvas></div>
+      </figure>
+    </div>
+  </div>
+  </div>
+
+  <div class="qbox" id="quiz-s5">
+    <div class="qhead">
+      <div class="qhead-l"><i class="fa-solid fa-circle-question"></i> Preguntas rápidas — Sección 5</div>
+      <span class="qbadge" id="qbadge-s5">0 / 3</span>
+    </div>
+    <div class="qbody" id="qbody-s5"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECCIÓN 6: PROPAGACIÓN DE ERRORES
+══════════════════════════════════════ -->
+<section class="ls" id="s6" hidden>
+  <div class="sh">
+    <div class="snum" id="snum-s6">6</div>
+    <div>
+      <h2 class="stitle">Propagación de errores</h2>
+      <p class="ssub">1.9 · 1.10 · 1.11 · 1.12 · 1.13 — Cómo se acumulan los errores</p>
+    </div>
+  </div>
+  <div class="lesson-content">
+  <div class="th">
+    <p>Cuando operamos con números aproximados, el error se <strong>propaga</strong> según la operación realizada.</p>
+    <div class="fbox">
+      <div class="flabel">Fórmulas de propagación</div>
+      \[\Delta(u \pm v) = \Delta u + \Delta v \qquad \text{(suma y resta — errores absolutos)}\]
+      \[\frac{\Delta(u \cdot v)}{|u \cdot v|} \approx \frac{\Delta u}{|u|} + \frac{\Delta v}{|v|} \qquad \text{(producto — errores relativos)}\]
+      \[\frac{\Delta(u / v)}{|u / v|} \approx \frac{\Delta u}{|u|} + \frac{\Delta v}{|v|} \qquad \text{(cociente — errores relativos)}\]
+      \[\frac{\Delta(u^n)}{|u^n|} \approx n \cdot \frac{\Delta u}{|u|} \qquad \text{(potencia — error relativo)}\]
+    </div>
+    <div class="ibox tip"><i class="fa-solid fa-circle-info"></i><p>Para la <strong>suma y resta</strong> conviene trabajar con errores absolutos. Para <strong>producto, cociente y potencia</strong> conviene trabajar con errores relativos.</p></div>
+  </div>
+
+  <!-- EJEMPLO propagación -->
+  <div class="ex">
+    <div class="ex-head"><i class="fa-solid fa-pen-to-square"></i> Ejemplo — Propagación en un producto</div>
+    <div class="ex-body">
+      <p>Sea \(u = 3.0 \pm 0.1\) y \(v = 2.0 \pm 0.05\). Calcula el error de \(u \cdot v\).</p>
+      <div class="step"><div class="step-n">1</div><div class="step-c">Resultado central: \(u \cdot v = 6.0\)</div></div>
+      <div class="step"><div class="step-n">2</div><div class="step-c">Error relativo: \(\dfrac{\Delta u}{u} + \dfrac{\Delta v}{v} = \dfrac{0.1}{3.0} + \dfrac{0.05}{2.0} = 0.0333 + 0.025 = 0.0583\)</div></div>
+      <div class="step"><div class="step-n">3</div><div class="step-c">Error absoluto: \(0.0583 \times 6.0 = 0.35\)</div></div>
+      <div class="ex-res"><i class="fa-solid fa-check-circle"></i><span>\(u \cdot v = 6.0 \pm 0.35\) — error relativo \(\approx\) <strong>5.83%</strong></span></div>
+    </div>
+  </div>
+
+  <!-- CALCULADORA PROPAGACIÓN -->
+  <div class="calc">
+    <div class="calc-head"><i class="fa-solid fa-arrows-left-right-to-line"></i> Calculadora — Propagación de errores</div>
+    <div class="calc-body">
+      <div class="field" style="max-width:280px">
+        <label for="c-op">Operación</label>
+        <select id="c-op">
+          <option value="add">Suma u + v</option>
+          <option value="sub">Resta u − v</option>
+          <option value="mul" selected>Producto u × v</option>
+          <option value="div">Cociente u / v</option>
+          <option value="pow">Potencia u^n</option>
+        </select>
+      </div>
+      <div class="crow">
+        <div class="field"><label for="c-u">Valor u</label><input type="number" id="c-u" placeholder="Ej: 3.0" step="any"></div>
+        <div class="field"><label for="c-du">Error Δu</label><input type="number" id="c-du" placeholder="Ej: 0.1" step="any" min="0"></div>
+      </div>
+      <div class="crow" id="c-v-row">
+        <div class="field"><label for="c-v">Valor v <span id="c-v-label">(o n para potencia)</span></label><input type="number" id="c-v" placeholder="Ej: 2.0" step="any"></div>
+        <div class="field" id="c-dv-field"><label for="c-dv">Error Δv</label><input type="number" id="c-dv" placeholder="Ej: 0.05" step="any" min="0"></div>
+      </div>
+      <div class="calc-actions"><button class="cbtn" onclick="calcProp()">Calcular propagación</button> <button class="sample-btn" data-example="prop">Probar ejemplo</button></div>
+      <p class="calc-status" id="status-prop" role="status" hidden></p>
+      <div class="cres" id="res-prop">
+        <div class="rrow"><span class="rl">Resultado central</span><span class="rv" id="rp-res"></span></div>
+        <div class="rrow"><span class="rl">Error absoluto Δf</span><span class="rv w" id="rp-abs"></span></div>
+        <div class="rrow"><span class="rl">Error relativo</span><span class="rv" id="rp-rel"></span></div>
+        <div class="rrow"><span class="rl">Error porcentual</span><span class="rv g" id="rp-pct"></span></div>
+        <div class="rrow"><span class="rl">Resultado con error</span><span class="rv" id="rp-full"></span></div>
+      </div>
+      <figure class="module-chart" id="chart-prop" hidden>
+        <figcaption></figcaption>
+        <div><canvas aria-hidden="true"></canvas></div>
+      </figure>
+    </div>
+  </div>
+
+  <details style="margin:16px 0">
+    <summary style="cursor:pointer;font-size:13.5px;color:var(--accent);font-weight:600;padding:8px 0"><i class="fa-brands fa-python"></i> Ver código Python</summary>
+    <pre><code class="language-python">import math
+
+def propagar_error(u, du, v, dv, op):
+    if op == '+':
+        res = u + v
+        e_abs = du + dv
+    elif op == '-':
+        res = u - v
+        e_abs = du + dv
+    elif op == '*':
+        res = u * v
+        e_rel = du/abs(u) + dv/abs(v)
+        e_abs = e_rel * abs(res)
+    elif op == '/':
+        res = u / v
+        e_rel = du/abs(u) + dv/abs(v)
+        e_abs = e_rel * abs(res)
+    elif op == 'pow':  # v actúa como exponente n
+        n = v
+        res = u ** n
+        e_rel = n * du / abs(u)
+        e_abs = e_rel * abs(res)
+
+    e_rel = e_abs / abs(res)
+    print(f"Resultado: {res} ± {e_abs:.6f}")
+    print(f"Error relativo: {e_rel*100:.4f}%")
+    return res, e_abs</code></pre>
+  </details>
+  </div>
+
+  <div class="qbox" id="quiz-s6">
+    <div class="qhead">
+      <div class="qhead-l"><i class="fa-solid fa-circle-question"></i> Preguntas rápidas — Sección 6</div>
+      <span class="qbadge" id="qbadge-s6">0 / 3</span>
+    </div>
+    <div class="qbody" id="qbody-s6"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECCIÓN 7: CONDICIONAMIENTO
+══════════════════════════════════════ -->
+<section class="ls" id="s7" hidden>
+  <div class="sh">
+    <div class="snum" id="snum-s7">7</div>
+    <div>
+      <h2 class="stitle">Condicionamiento de un problema</h2>
+      <p class="ssub">1.14 — Sensibilidad de la solución a perturbaciones</p>
+    </div>
+  </div>
+  <div class="lesson-content">
+  <div class="th">
+    <p>El <strong>número de condición</strong> \(\kappa\) mide cuánto se amplifica un pequeño error en los datos al calcular la solución.</p>
+    <div class="fbox">
+      <div class="flabel">Número de condición (caso escalar)</div>
+      \[\kappa(x) = \left| \frac{x \cdot f'(x)}{f(x)} \right|\]
+      <p style="font-size:14px;color:var(--muted);margin-top:8px">Si \(\kappa \gg 1\) el problema está <strong>mal condicionado</strong>: pequeños errores en la entrada se amplifican enormemente en la salida.</p>
+    </div>
+    <ul>
+      <li><strong>Bien condicionado</strong> (\(\kappa \approx 1\)): la solución cambia poco aunque los datos tengan pequeños errores.</li>
+      <li><strong>Mal condicionado</strong> (\(\kappa \gg 1\)): la solución puede variar drásticamente con cambios minúsculos en los datos.</li>
+    </ul>
+    <div class="ibox warn"><i class="fa-solid fa-triangle-exclamation"></i><p>El mal condicionamiento es una <strong>propiedad del problema</strong>, no del algoritmo. No puedes resolverlo cambiando de método; debes reestructurar el problema o conseguir datos más precisos.</p></div>
+    <div class="ex">
+      <div class="ex-head"><i class="fa-solid fa-pen-to-square"></i> Ejemplo — Cancelación catastrófica</div>
+      <div class="ex-body">
+        <p>Calcula \(f(x) = \sqrt{x+1} - \sqrt{x}\) para \(x = 10000\) con 5 cifras significativas.</p>
+        <div class="step"><div class="step-n">1</div><div class="step-c">Directo: \(\sqrt{10001} = 100.005\), \(\sqrt{10000} = 100.000\) → \(f = 0.005\). Error de redondeo enorme.</div></div>
+        <div class="step"><div class="step-n">2</div><div class="step-c">Reformulado: \(f(x) = \dfrac{1}{\sqrt{x+1}+\sqrt{x}} = \dfrac{1}{200.005} \approx 0.0049999\). Mucho más preciso.</div></div>
+        <div class="ex-res"><i class="fa-solid fa-check-circle"></i><span>Reorganizar la fórmula elimina la cancelación catastrófica.</span></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <div class="qbox" id="quiz-s7">
+    <div class="qhead">
+      <div class="qhead-l"><i class="fa-solid fa-circle-question"></i> Preguntas rápidas — Sección 7</div>
+      <span class="qbadge" id="qbadge-s7">0 / 2</span>
+    </div>
+    <div class="qbody" id="qbody-s7"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     SECCIÓN 8: CONVERGENCIA
+══════════════════════════════════════ -->
+<section class="ls" id="s8" hidden>
+  <div class="sh">
+    <div class="snum" id="snum-s8">8</div>
+    <div>
+      <h2 class="stitle">Orden y convergencia de un método iterativo</h2>
+      <p class="ssub">1.15 — Velocidad de convergencia</p>
+    </div>
+  </div>
+  <div class="lesson-content">
+  <div class="th">
+    <p>Un método iterativo genera una secuencia \(x_0, x_1, x_2, \ldots\) que converge hacia la solución exacta \(x^*\). El <strong>orden de convergencia</strong> \(p\) dice qué tan rápido decrece el error:</p>
+    <div class="fbox">
+      <div class="flabel">Orden de convergencia</div>
+      \[|e_{n+1}| \leq C \cdot |e_n|^p \qquad \text{donde } e_n = x_n - x^*\]
+      <ul style="font-size:14px;color:var(--muted);margin-top:10px;padding-left:0;list-style:none">
+        <li>• \(p = 1\): <strong>Convergencia lineal</strong> — dígitos correctos crecen linealmente</li>
+        <li>• \(p = 2\): <strong>Convergencia cuadrática</strong> — dígitos correctos casi se duplican por iteración</li>
+        <li>• \(p = 3\): <strong>Convergencia cúbica</strong> — dígitos correctos casi se triplican</li>
+      </ul>
+    </div>
+    <p>Para estimar el orden empíricamente con tres errores consecutivos:</p>
+    <div class="fbox">
+      \[p \approx \frac{\ln(e_{n+1}/e_n)}{\ln(e_n/e_{n-1})}\]
+    </div>
+  </div>
+
+  <!-- CALCULADORA CONVERGENCIA + GRÁFICO -->
+  <div class="calc">
+    <div class="calc-head"><i class="fa-solid fa-chart-line"></i> Calculadora — Orden de convergencia</div>
+    <div class="calc-body">
+      <p style="font-size:14px;color:var(--muted)">Ingresa al menos 3 valores de error (uno por línea). Ejemplo: errores por iteración de un método.</p>
+      <div class="field">
+        <label for="c-conv">Secuencia de errores (un valor por línea)</label>
+        <textarea id="c-conv" rows="5" style="padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);font-family:var(--fm);font-size:14px;resize:vertical;width:100%" placeholder="0.5&#10;0.1&#10;0.01&#10;0.0001"></textarea>
+      </div>
+      <div class="calc-actions"><button class="cbtn" onclick="calcConv()">Analizar convergencia</button> <button class="sample-btn" data-example="conv">Probar ejemplo</button></div>
+      <p class="calc-status" id="status-conv" role="status" hidden></p>
+      <div class="cres" id="res-conv">
+        <div class="rrow"><span class="rl">Orden estimado</span><span class="rv g" id="rc-p"></span></div>
+        <div class="rrow"><span class="rl">Tipo de convergencia</span><span class="rv" id="rc-type"></span></div>
+        <div class="rrow"><span class="rl">Constante C estimada</span><span class="rv" id="rc-c"></span></div>
+      </div>
+      <figure class="module-chart" id="chart-conv" hidden>
+        <figcaption></figcaption>
+        <div><canvas aria-hidden="true"></canvas></div>
+      </figure>
+    </div>
+  </div>
+
+  <details style="margin:16px 0">
+    <summary style="cursor:pointer;font-size:13.5px;color:var(--accent);font-weight:600;padding:8px 0"><i class="fa-brands fa-python"></i> Ver código Python</summary>
+    <pre><code class="language-python">import math
+
+errores = [0.5, 0.1, 0.01, 0.0001]
+
+print("n | e_n        | p estimado")
+print("-" * 35)
+for i in range(1, len(errores) - 1):
+    p = math.log(errores[i+1] / errores[i]) / \
+        math.log(errores[i] / errores[i-1])
+    print(f"{i} | {errores[i]:.6f} | {p:.4f}")</code></pre>
+  </details>
+  </div>
+
+  <div class="qbox" id="quiz-s8">
+    <div class="qhead">
+      <div class="qhead-l"><i class="fa-solid fa-circle-question"></i> Preguntas rápidas — Sección 8</div>
+      <span class="qbadge" id="qbadge-s8">0 / 3</span>
+    </div>
+    <div class="qbody" id="qbody-s8"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════
+     EXAMEN FINAL
+══════════════════════════════════════ -->
+<section class="exambox" id="exam" hidden>
+  <div class="exam-hd">
+    <div class="ico"><i class="fa-solid fa-scroll"></i></div>
+    <div>
+      <h2>Examen Final — Módulo 1: Errores</h2>
+      <p>15 preguntas de selección y respuesta numérica. Apruebas con 10 o más aciertos.</p>
+    </div>
+  </div>
+  <div class="exam-body">
+    <div id="exam-active">
+      <div class="eprog">
+        <span id="exam-q-label">Pregunta 1 de 15</span>
+        <div class="eprog-track"><div class="eprog-fill" id="exam-prog" style="width:6.67%"></div></div>
+      </div>
+      <div class="eq">
+        <span class="eqn" id="exam-qn"></span>
+        <span id="exam-qtxt" tabindex="-1"></span>
+      </div>
+      <div class="opts" id="exam-opts"></div>
+      <div class="enav">
+        <button class="ebtn s" id="exam-prev" onclick="examNav(-1)" disabled><i class="fa-solid fa-arrow-left"></i> Anterior</button>
+        <button class="ebtn p" id="exam-next" onclick="examNav(1)">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+    <div class="eresults" id="exam-results">
+      <div class="score-wrap">
+        <div class="score-circle" id="score-circle"></div>
+        <div class="score-label"><strong id="score-msg"></strong><span id="score-sub"></span></div>
+      </div>
+      <div class="ereview" id="exam-review">
+        <h3>Revisión detallada</h3>
+        <div id="exam-review-items"></div>
+      </div>
+      <button class="retry-btn" onclick="examReset()"><i class="fa-solid fa-rotate-right"></i> Intentar de nuevo</button>
+    </div>
+  </div>
+</section>
+
+
+<section class="study-resource" id="video" hidden aria-labelledby="video-title">
+  <h2 id="video-title">Video del módulo</h2>
+  <p>Aproximaciones y errores. Truncado, redondeo, error absoluto y error relativo.</p>
+  <iframe id="module-video" class="video-player" title="Aproximaciones y errores" hidden
+    data-src="https://www.youtube.com/embed/qxsn00s5zf0" referrerpolicy="strict-origin-when-cross-origin"
+    allow="encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>
+  <p id="video-local-note" hidden>Para ver el reproductor dentro de ITERA, abre el módulo desde un servidor web. <a href="http://localhost:8000/itera-learn/modulo-1/#video">Abrir en el servidor local</a></p>
+  <a class="video-link" href="https://www.youtube.com/watch?v=qxsn00s5zf0" target="_blank" rel="noopener noreferrer">
+    <i class="fa-brands fa-youtube" aria-hidden="true"></i> Ver video en YouTube
+  </a>
+</section>
+
+<section class="study-resource" id="formulas" hidden aria-labelledby="formulas-title">
+  <h2 id="formulas-title">Fórmulas de errores numéricos</h2>
+  <p>Consulta estas fórmulas mientras estudias o resuelves ejercicios.</p>
+  <div class="formula-grid">
+    <article class="fbox">
+      <h3>Redondeo y truncamiento</h3>
+      <p>Para conservar \(d\) decimales, usa \(m=10^d\). El redondeo en un empate se aleja de cero.</p>
+      \[T_d(x)=\frac{\operatorname{trunc}(mx)}{m}\]
+      \[R_d(x)=\frac{\operatorname{sgn}(x)\lfloor m|x|+0.5\rfloor}{m}\]
+    </article>
+    <article class="fbox">
+      <h3>Error absoluto y relativo</h3>
+      <p>\(x_v\) es el valor verdadero y \(x_a\) el aproximado. El error relativo queda indefinido si \(x_v=0\).</p>
+      \[E_a=|x_v-x_a|,\quad E_r=\frac{E_a}{|x_v|}\]
+      \[E_{\%}=100E_r\,\%\]
+    </article>
+    <article class="fbox">
+      <h3>Error entre iteraciones</h3>
+      <p>Estima el cambio relativo cuando se desconoce el valor exacto y \(x_{n+1}\ne0\).</p>
+      \[\varepsilon_a=\left|\frac{x_{n+1}-x_n}{x_{n+1}}\right|\,100\,\%\]
+    </article>
+    <article class="fbox">
+      <h3>Cifras significativas</h3>
+      <p>Umbral de error relativo que usa el módulo para estimar \(n\) cifras significativas.</p>
+      \[E_r\le 0.5\times10^{1-n}\]
+    </article>
+    <article class="fbox">
+      <h3>Propagación del error</h3>
+      <p>\(\Delta u\) y \(\Delta v\) son incertidumbres absolutas. Para producto, cociente y potencia se usa una aproximación de primer orden.</p>
+      \[\Delta(u\pm v)\le \Delta u+\Delta v\]
+      \[E_r(uv),\ E_r(u/v)\ \approx\ \frac{\Delta u}{|u|}+\frac{\Delta v}{|v|}\]
+      \[E_r(u^n)\approx |n|\frac{\Delta u}{|u|}\]
+      <p>Las expresiones relativas requieren un resultado nominal distinto de cero.</p>
+    </article>
+    <article class="fbox">
+      <h3>Condicionamiento</h3>
+      <p>El número de condición mide la amplificación local del error relativo. Se usa cuando \(f(x)\ne0\).</p>
+      \[\kappa(x)=\left|\frac{x f'(x)}{f(x)}\right|\]
+    </article>
+    <article class="fbox">
+      <h3>Orden de convergencia</h3>
+      <p>Usa tres magnitudes consecutivas de error positivas y un denominador distinto de cero.</p>
+      \[p\approx\frac{\ln(|e_{n+1}|/|e_n|)}{\ln(|e_n|/|e_{n-1}|)}\]
+    </article>
+  </div>
+</section>
+
+</main>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+
+<script src="preguntas.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════
+// DATOS: QUIZZES
+// ═══════════════════════════════════════════════════════
+const QUIZ_BANK = {
+  's1': {
+    total: 2,
+    questions: [
+      {
+        text: '¿Cuál es la principal ventaja de los métodos numéricos frente a los métodos analíticos?',
+        opts: ['Siempre producen resultados exactos','Pueden resolver problemas sin solución analítica cerrada','Son más fáciles de entender','No requieren computadoras'],
+        cor: 1,
+        exp: 'Los métodos numéricos son especialmente útiles cuando la solución analítica exacta es imposible o impráctica: ecuaciones no lineales complejas, integrales sin forma cerrada, sistemas muy grandes. Su desventaja es que producen soluciones <em>aproximadas</em>.'
+      },
+      {
+        text: '¿Qué tipo de error introduce la computadora al detener una serie de Taylor después de 4 términos?',
+        opts: ['Error inherente','Error de redondeo','Error de truncamiento','Error absoluto'],
+        cor: 2,
+        exp: 'El <strong>error de truncamiento</strong> ocurre al reemplazar un proceso matemático infinito (una serie infinita) por uno finito (4 términos). Es distinto del error de redondeo, que viene de la representación binaria de punto flotante.'
+      }
+    ]
+  },
+  's2': {
+    total: 2,
+    questions: [
+      {
+        text: 'Al redondear 3.7452 a dos decimales, el resultado es:',
+        opts: ['3.74','3.75','3.7','3.745'],
+        cor: 1,
+        exp: 'Para redondear a 2 decimales se mira el tercer decimal: 3.74<strong>5</strong>2. Como el tercer decimal es 5, el segundo decimal sube: 3.74 → <strong>3.75</strong>.'
+      },
+      {
+        text: '¿Qué es la cancelación catastrófica?',
+        opts: ['Un error de desbordamiento en la memoria','Pérdida de cifras significativas al restar dos números casi iguales','Error cuando el número es demasiado grande','Un error en la suma de muchos términos'],
+        cor: 1,
+        exp: 'La cancelación catastrófica ocurre al <strong>restar dos números casi iguales</strong>: los dígitos significativos se cancelan y el resultado relativo tiene muy poca información útil. Ej: 1.0001 − 1.0000 = 0.0001 con muchas c.s. perdidas.'
+      }
+    ]
+  },
+  's3': {
+    total: 3,
+    questions: [
+      {
+        text: 'El error absoluto al aproximar √3 ≈ 1.732 (siendo √3 = 1.73205...) es:',
+        opts: ['5.08 × 10⁻⁵','2.93 × 10⁻³','0.00508','5.08 × 10⁻³'],
+        cor: 0,
+        exp: 'E_abs = |x_v − x_a| = |1.73205... − 1.732| = 0.00005... = <strong>5.08 × 10⁻⁵</strong>. Es un error pequeño: solo la quinta cifra decimal difiere.'
+      },
+      {
+        text: 'Si x_verdadero = 10 y x_aproximado = 9.5, el error relativo porcentual es:',
+        opts: ['5%','0.5%','50%','5.26%'],
+        cor: 0,
+        exp: 'E_abs = |10 − 9.5| = 0.5. E_r = 0.5 / 10 = 0.05. E_% = 0.05 × 100 = <strong>5%</strong>. Nota: si usaras el valor aproximado como divisor obtendrías 5.26%, que es el error relativo "hacia atrás".'
+      },
+      {
+        text: 'En un proceso iterativo, cuando no se conoce el valor verdadero, el error se estima como:',
+        opts: ['|x_n+1 − x_n| / |x_n+1| × 100%','|x_n+1 − x_v| / |x_v|','Δx / x','x_n / x_n+1'],
+        cor: 0,
+        exp: 'Cuando no conocemos x_v, comparamos iteraciones consecutivas: <strong>ε_a = |x_{n+1} − x_n| / |x_{n+1}| × 100%</strong>. Este es el criterio de parada más común en métodos iterativos.'
+      }
+    ]
+  },
+  's4': {
+    total: 2,
+    questions: [
+      {
+        text: 'El error en los datos de entrada de un problema (mediciones físicas) se llama:',
+        opts: ['Error de truncamiento','Error de redondeo','Error inherente','Error de propagación'],
+        cor: 2,
+        exp: 'El <strong>error inherente</strong> (o error de los datos) proviene de las imprecisiones que ya existen en los datos antes de comenzar el cálculo, como la incertidumbre en mediciones físicas. No lo introduce el método numérico.'
+      },
+      {
+        text: '¿Cuál de estas es la fuente del error de redondeo en una computadora?',
+        opts: ['Usar pocos términos de una serie','La representación binaria de punto flotante con precisión finita','Errores en los datos de entrada','Un algoritmo mal diseñado'],
+        cor: 1,
+        exp: 'Las computadoras usan <strong>punto flotante con precisión finita</strong> (ej: 64 bits en doble precisión). Muchos números decimales no tienen representación binaria exacta, generando pequeños errores de redondeo en cada operación.'
+      }
+    ]
+  },
+  's5': {
+    total: 3,
+    questions: [
+      {
+        text: '¿Cuántas cifras significativas tiene el número 0.00450?',
+        opts: ['5','6','3','2'],
+        cor: 2,
+        exp: 'Los ceros a la izquierda del primer dígito distinto de cero NO son significativos (0.00). Los dígitos 4, 5 y el cero final SÍ son significativos porque está después del punto decimal. Total: <strong>3 cifras significativas</strong>.'
+      },
+      {
+        text: '¿Cuántas cifras significativas tiene 1.0030 × 10³?',
+        opts: ['3','4','5','2'],
+        cor: 2,
+        exp: '1.0030 × 10³ = 1003.0. Los cinco dígitos (1, 0, 0, 3, 0) son todos significativos: los ceros entre dígitos significativos y el cero final después del punto decimal <strong>sí son significativos</strong>. Total: <strong>5 c.s.</strong>'
+      },
+      {
+        text: 'Si una medición tiene error relativo de 0.5%, ¿cuántas cifras significativas son confiables?',
+        opts: ['1','2','3','4'],
+        cor: 2,
+        exp: 'Usando la relación n c.s. ↔ E_r ≈ 0.5 × 10^(1-n): para n=3, E_r ≈ 0.5 × 10^(−2) = 0.5%. Entonces un error relativo de 0.5% corresponde a <strong>3 cifras significativas</strong> confiables.'
+      }
+    ]
+  },
+  's6': {
+    total: 3,
+    questions: [
+      {
+        text: 'Si u = 4.0 ± 0.2 y v = 3.0 ± 0.1, el error absoluto de u + v es:',
+        opts: ['0.1','0.2','0.3','0.15'],
+        cor: 2,
+        exp: 'Para la suma/resta los errores absolutos se suman directamente: Δ(u+v) = Δu + Δv = 0.2 + 0.1 = <strong>0.3</strong>. Resultado: 7.0 ± 0.3.'
+      },
+      {
+        text: 'El error relativo del producto u·v donde u=4.0±0.2, v=3.0±0.1 es aprox.:',
+        opts: ['8.33%','5%','3.33%','11.5%'],
+        cor: 0,
+        exp: 'Δ(u·v)/|u·v| ≈ Δu/|u| + Δv/|v| = 0.2/4 + 0.1/3 = 0.05 + 0.0333 = 0.0833 = <strong>8.33%</strong>. Error absoluto = 0.0833 × 12 ≈ 1.0.'
+      },
+      {
+        text: 'Si x = 3.0 ± 0.15, el error relativo de x⁴ es aproximadamente:',
+        opts: ['5%','20%','15%','0.6%'],
+        cor: 1,
+        exp: 'Para la potencia: Δ(x^n)/|x^n| ≈ n·Δx/|x| = 4 × (0.15/3) = 4 × 0.05 = 0.20 = <strong>20%</strong>. La potencia amplifica el error relativo por el exponente.'
+      }
+    ]
+  },
+  's7': {
+    total: 2,
+    questions: [
+      {
+        text: 'Un problema está MAL condicionado cuando:',
+        opts: ['El algoritmo usado es ineficiente','El número de condición κ es cercano a 1','Pequeños cambios en la entrada producen grandes cambios en la salida','La solución converge muy rápido'],
+        cor: 2,
+        exp: 'El mal condicionamiento (κ ≫ 1) significa que <strong>pequeñas perturbaciones en los datos se amplifican enormemente en la solución</strong>. Es una propiedad del problema, no del algoritmo: cambiar de método no lo corrige.'
+      },
+      {
+        text: 'La mejor solución para evitar la cancelación catastrófica es:',
+        opts: ['Usar más iteraciones','Reformular algebraicamente la expresión para evitar la resta','Aumentar la precisión de los datos','Redondear antes de restar'],
+        cor: 1,
+        exp: 'Como muestra el ejemplo de √(x+1)−√x, la solución es <strong>reformular algebricamente</strong>: 1/(√(x+1)+√x) evita la resta de números similares. Aumentar precisión ayuda pero no elimina el problema.'
+      }
+    ]
+  },
+  's8': {
+    total: 3,
+    questions: [
+      {
+        text: 'La convergencia cuadrática (p=2) se distingue porque:',
+        opts: ['El error disminuye en un 50% cada iteración','El número de dígitos correctos casi se duplica por iteración','Requiere más iteraciones que la convergencia lineal','El error oscila alrededor de la solución'],
+        cor: 1,
+        exp: 'Con convergencia cuadrática |e_{n+1}| ≤ C·|e_n|². Si en la iteración n tienes k dígitos correctos, en la siguiente tendrás ~2k. Esto explica por qué Newton-Raphson (que es cuadrático) converge tan rápido.'
+      },
+      {
+        text: 'Para la secuencia de errores 0.5, 0.25, 0.125, 0.0625, el orden de convergencia es:',
+        opts: ['p = 2 (cuadrática)','p = 1 (lineal)','p = 0.5 (sublineal)','p = 3 (cúbica)'],
+        cor: 1,
+        exp: 'Cada error es exactamente la mitad del anterior: e_{n+1}/e_n = 0.5 = constante < 1. Cuando la razón entre errores consecutivos es constante, la convergencia es <strong>lineal (p=1)</strong> con C = 0.5.'
+      },
+      {
+        text: 'Para estimar el orden de convergencia empíricamente se necesitan al menos:',
+        opts: ['1 valor de error','2 valores de error','3 valores de error consecutivos','10 iteraciones'],
+        cor: 2,
+        exp: 'La fórmula p ≈ ln(e_{n+1}/e_n) / ln(e_n/e_{n-1}) requiere <strong>3 valores consecutivos</strong> de error (e_{n-1}, e_n, e_{n+1}), ya que calcula dos razones entre errores consecutivos.'
+      }
+    ]
+  }
+};
+
+// ═══════════════════════════════════════════════════════
+// DATOS: EXAMEN FINAL (15 preguntas)
+// ═══════════════════════════════════════════════════════
+const EXAM_BANK = [
+  {
+    text: '¿Cuál es el error absoluto al aproximar e ≈ 2.718 (siendo e = 2.71828...)?',
+    opts: ['0.00028...','0.0028','0.028','1.03 × 10⁻⁴'],
+    cor: 0,
+    exp: 'E_abs = |2.71828... − 2.718| = 0.00028... ≈ <strong>2.8 × 10⁻⁴</strong>. La aproximación 2.718 es correcta en 4 cifras decimales.'
+  },
+  {
+    text: 'Si x_verdadero = 5.0 y x_aproximado = 4.75, el error relativo porcentual es:',
+    opts: ['5%','4.75%','5.26%','2.5%'],
+    cor: 0,
+    exp: 'E_abs = |5.0 − 4.75| = 0.25. E_r = 0.25/5.0 = 0.05. E_% = 0.05 × 100 = <strong>5%</strong>.'
+  },
+  {
+    text: '¿Cuántas cifras significativas tiene 0.00340?',
+    opts: ['5','6','3','2'],
+    cor: 2,
+    exp: 'Los ceros antes del 3 son no significativos (ceros guía). Los dígitos 3, 4 y el cero final (que está después del punto decimal) <strong>sí son significativos</strong>. Total: <strong>3 c.s.</strong>'
+  },
+  {
+    text: 'Al redondear 7.4851 a dos cifras decimales, el resultado es:',
+    opts: ['7.49','7.48','7.50','7.4'],
+    cor: 0,
+    exp: 'Se mira el tercer decimal: 7.48<strong>5</strong>1. Como es ≥ 5, el segundo decimal sube: 7.48 → <strong>7.49</strong>. No es 7.50 porque solo el dígito en posición 2 cambia.'
+  },
+  {
+    text: '¿Qué tipo de error ocurre cuando se usa la serie de Taylor truncada para calcular eˣ?',
+    opts: ['Error inherente','Error de redondeo','Error de truncamiento','Error de medición'],
+    cor: 2,
+    exp: 'El <strong>error de truncamiento</strong> surge al reemplazar la serie infinita eˣ = Σ(xⁿ/n!) por una suma finita. No tiene que ver con la representación binaria ni con los datos de entrada.'
+  },
+  {
+    text: 'Si u = 3.0 ± 0.1 y v = 2.0 ± 0.05, el error absoluto de u + v es:',
+    opts: ['0.15','0.05','0.1','0.2'],
+    cor: 0,
+    exp: 'Para suma: Δ(u+v) = Δu + Δv = 0.1 + 0.05 = <strong>0.15</strong>. Resultado: u+v = 5.0 ± 0.15.'
+  },
+  {
+    text: 'Para el producto u·v donde u=3.0±0.1 y v=2.0±0.05, el error relativo es aprox.:',
+    opts: ['5.83%','3.33%','2.5%','6%'],
+    cor: 0,
+    exp: 'Δ(uv)/|uv| ≈ Δu/u + Δv/v = 0.1/3 + 0.05/2 = 0.0333 + 0.025 = 0.0583 = <strong>5.83%</strong>. Error absoluto = 0.0583 × 6 = 0.35.'
+  },
+  {
+    text: '¿Cuántas cifras significativas tiene 1.0030 × 10³?',
+    opts: ['3','4','5','2'],
+    cor: 2,
+    exp: '1.0030 × 10³. Los dígitos de 1.0030 son todos significativos: 1, 0, 0, 3 y el cero final. Total: <strong>5 cifras significativas</strong>.'
+  },
+  {
+    text: 'Un problema está BIEN condicionado cuando:',
+    opts: ['Pequeños cambios en la entrada producen grandes cambios en la salida','Pequeños cambios en la entrada producen pequeños cambios en la salida','El número de condición κ ≫ 1','El algoritmo es muy eficiente'],
+    cor: 1,
+    exp: 'Un problema bien condicionado (κ ≈ 1) es <strong>estable frente a perturbaciones</strong>: si los datos cambian poco, la solución también cambia poco. Es la condición ideal para trabajar con aritmética de precisión finita.'
+  },
+  {
+    text: 'Si los errores por iteración son: 0.1, 0.01, 0.0001, 10⁻⁸, el orden de convergencia es:',
+    opts: ['p = 1 (lineal)','p = 2 (cuadrática)','p = 1.5','p = 3'],
+    cor: 1,
+    exp: 'Verificación: si C=1 y p=2: e1=0.01=(0.1)², e2=0.0001=(0.01)², e3=10⁻⁸=(0.0001)². Los errores siguen |e_{n+1}|=|e_n|², confirmando <strong>convergencia cuadrática (p=2)</strong>.'
+  },
+  {
+    text: '¿Qué es la cancelación catastrófica?',
+    opts: ['Error cuando dos números muy diferentes se suman','Pérdida de cifras significativas al restar dos números casi iguales','Error de desbordamiento en el computador','Error cuando el número es demasiado pequeño para representarlo'],
+    cor: 1,
+    exp: 'La cancelación catastrófica es la <strong>pérdida masiva de cifras significativas al restar números casi iguales</strong>. Ej: 1.23456 − 1.23455 = 0.00001. El resultado tiene solo 1 c.s. aunque los operandos tenían 6.'
+  },
+  {
+    text: 'El error relativo de x³ donde x = 2.0 ± 0.1 es aproximadamente:',
+    opts: ['15%','5%','10%','3.33%'],
+    cor: 0,
+    exp: 'Para la potencia: Δ(x³)/|x³| ≈ 3·Δx/|x| = 3 × (0.1/2) = 3 × 0.05 = 0.15 = <strong>15%</strong>. El exponente multiplica el error relativo.'
+  },
+  {
+    text: 'Si el error relativo de una medición es 0.5%, ¿cuántas c.s. son confiables?',
+    opts: ['1','2','3','4'],
+    cor: 2,
+    exp: 'Usando n c.s. ↔ E_r ≈ 0.5×10^(1-n): para n=3 → E_r ≈ 0.5×10⁻² = 0.5%. Un error relativo de 0.5% corresponde a <strong>3 cifras significativas</strong> confiables.'
+  },
+  {
+    text: 'La convergencia lineal se caracteriza porque:',
+    opts: ['|e_{n+1}| ≤ C·|e_n|² con C<1','|e_{n+1}| ≤ C·|e_n| con C<1','Los dígitos correctos se duplican cada iteración','El error siempre es cero en la segunda iteración'],
+    cor: 1,
+    exp: 'La convergencia lineal (p=1) cumple <strong>|e_{n+1}| ≤ C·|e_n|</strong> con C<1. Los errores forman una progresión geométrica con razón C. Ejemplo: bisección tiene convergencia lineal con C=0.5.'
+  },
+  {
+    text: 'Al redondear 2.5450 a 3 cifras significativas:',
+    opts: ['2.54','2.55','2.545','2.5'],
+    cor: 1,
+    exp: '3 c.s. de 2.5450: las primeras 3 c.s. son 2, 5, 4. El siguiente dígito es 5 → se redondea hacia arriba: 2.54 → <strong>2.55</strong>.'
+  }
+];
+
+// ═══════════════════════════════════════════════════════
+// ESTADO
+// ═══════════════════════════════════════════════════════
+const SECTIONS = ['s1','s2','s3','s4','s5','s6','s7','s8'];
+let state = loadState();
+const v = questionVariants;
+const quizVariants = {
+  s1: [null, v.series],
+  s2: [() => v.round()],
+  s3: [() => v.error(), () => v.error(true)],
+  s5: [() => v.figures(), () => v.figures(true), v.tolerance],
+  s6: ['sum', 'product', 'power'].map(op => () => v.propagation(op)),
+  s8: [null, () => v.convergence()]
+};
+const examVariants = [
+  () => v.error(), () => v.error(true), () => v.figures(), () => v.round(), v.series,
+  () => v.propagation('sum'), () => v.propagation('product'), () => v.figures(true),
+  null, () => v.convergence(true), null, () => v.propagation('power'),
+  v.tolerance, null, () => v.round(true)
+];
+const QUIZZES = {};
+function newQuiz(sid) {
+  const bank = QUIZ_BANK[sid];
+  const questions = makeAttempt(bank.questions, quizVariants[sid] || []);
+  state['attempt_' + sid] = questions;
+  return questions;
+}
+SECTIONS.forEach(sid => {
+  if (!state['attempt_' + sid]) {
+    delete state['quiz_' + sid];
+    delete state['quiz_sel_' + sid];
+    delete state[sid + '_done'];
+  }
+  const questions = state['attempt_' + sid] || newQuiz(sid);
+  QUIZZES[sid] = { total: questions.length, questions };
+});
+if (!state.examAttempt) delete state.exam_score;
+saveState();
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem('itera-m1') || '{}');
+  } catch { return {}; }
+}
+function saveState() {
+  try { localStorage.setItem('itera-m1', JSON.stringify(state)); } catch {}
+}
+
+// ═══════════════════════════════════════════════════════
+// TEMA
+// ═══════════════════════════════════════════════════════
+const html = document.documentElement;
+const themeBtn = document.getElementById('theme-btn');
+let dark = localStorage.getItem('itera-theme') === 'dark';
+applyTheme();
+
+themeBtn.addEventListener('click', () => {
+  dark = !dark;
+  localStorage.setItem('itera-theme', dark ? 'dark' : 'light');
+  applyTheme();
+  [...charts.values()].forEach(({id, title, labels, data, type, log}) => showChart(id, title, labels, data, type, log));
+});
+
+function applyTheme() {
+  html.setAttribute('data-theme', dark ? 'dark' : 'light');
+  themeBtn.innerHTML = dark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+}
+
+// ═══════════════════════════════════════════════════════
+// PROGRESO
+// ═══════════════════════════════════════════════════════
+const PREVIEW_ALL_TOPICS_COMPLETE = location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+
+function isTopicComplete(sid) {
+  return PREVIEW_ALL_TOPICS_COMPLETE || Boolean(state[sid + '_done']);
+}
+
+function updateProgress() {
+  const done = SECTIONS.filter(isTopicComplete).length;
+  const pct = Math.round((done / SECTIONS.length) * 100);
+  document.getElementById('main-prog').style.width = pct + '%';
+  document.getElementById('prog-label').textContent = `${done} de ${SECTIONS.length} temas`;
+
+  SECTIONS.forEach((sid, index) => {
+    const locked = SECTIONS.slice(0, index).some(previous => !isTopicComplete(previous));
+    const link = document.querySelector(`[data-sid="${sid}"]`);
+    link.toggleAttribute('inert', locked);
+    link.classList.toggle('locked', locked);
+    const chk = document.getElementById('chk-' + sid);
+    const num = document.getElementById('snum-' + sid);
+    const nav = document.querySelector(`[data-sid="${sid}"]`);
+    if (isTopicComplete(sid)) {
+      if (chk) { chk.innerHTML = '<i class="fa-solid fa-check"></i>'; }
+      if (num) num.classList.add('done');
+      if (nav) nav.classList.add('done');
+    }
+  });
+
+  const examLocked = done !== SECTIONS.length;
+  document.querySelector('.sb-exam').toggleAttribute('inert', examLocked);
+  document.querySelector('.sb-exam').classList.toggle('locked', examLocked);
+  if (state.exam_score !== undefined) {
+    document.getElementById('sb-score').textContent =
+      `Examen: ${state.exam_score}/15`;
+  }
+}
+
+function showModuleView({ focusHeading = false } = {}) {
+  const links = [...document.querySelectorAll('.sidebar a[href^="#"]')];
+  const selected = links.find(link => !link.inert && link.hash === location.hash) || links[0];
+  if (location.hash && selected.hash !== location.hash) history.replaceState(null, '', selected.hash);
+  links.forEach(link => {
+    const active = link === selected;
+    document.getElementById(link.hash.slice(1)).hidden = !active;
+    link.classList.toggle('active', active);
+    if (active) link.setAttribute('aria-current', 'page');
+    else link.removeAttribute('aria-current');
+  });
+
+  const player = document.getElementById('module-video');
+  if (selected.hash === '#video' && /^https?:$/.test(location.protocol)) {
+    if (!player.hasAttribute('src')) player.src = player.dataset.src;
+    player.hidden = false;
+  } else {
+    player.removeAttribute('src');
+    player.hidden = true;
+  }
+  document.getElementById('video-local-note').hidden = location.protocol !== 'file:';
+
+  if (focusHeading) {
+    const heading = document.querySelector(selected.hash + ' h2');
+    heading.tabIndex = -1;
+    heading.focus({ preventScroll: true });
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }
+}
+
+function markSectionDone(sid) {
+  state[sid + '_done'] = true;
+  saveState();
+  updateProgress();
+}
+
+// ═══════════════════════════════════════════════════════
+// QUIZZES
+// ═══════════════════════════════════════════════════════
+function buildQuizzes(sections = SECTIONS) {
+  sections.forEach(sid => {
+    const data = QUIZZES[sid];
+    const container = document.getElementById('qbody-' + sid);
+    if (!container) return;
+
+    const saved = state['quiz_' + sid] || {};
+    const pending = state['quiz_sel_' + sid] || {};
+    let html_str = '';
+
+    data.questions.forEach((q, qi) => {
+      const letters = ['A','B','C','D'];
+      const answered = saved[qi] !== undefined;
+      const sel = answered ? saved[qi] : pending[qi];
+      const correct = sel === q.cor;
+
+      html_str += `<div class="qblock" id="qb-${sid}-${qi}">
+        <div class="qtxt"><span class="qnum">${qi+1}.</span>${q.text}</div>
+        <div class="opts">`;
+
+      q.opts.forEach((o, oi) => {
+        let cls = 'opt';
+        if (answered) {
+          cls += ' disabled';
+          if (oi === q.cor) cls += ' cor';
+          else if (oi === sel && sel !== q.cor) cls += ' wrn';
+        } else if (oi === sel) cls += ' sel';
+
+        html_str += `<button type="button" class="${cls}" aria-pressed="${sel === oi}" ${answered ? 'disabled' : ''} onclick="selectOpt('${sid}',${qi},${oi})">
+          <span class="opt-l">${letters[oi]}</span><span>${o}</span>
+        </button>`;
+      });
+
+      html_str += `</div>`;
+
+      if (answered) {
+        const cls = correct ? 'fb cor show' : 'fb wrn show';
+        const icon = correct ? 'fa-check-circle' : 'fa-times-circle';
+        html_str += `<div class="${cls}"><i class="fa-solid ${icon}"></i><div>${correct ? '¡Correcto! ' : '<strong>Incorrecto.</strong> '}${q.exp}</div></div>`;
+      } else {
+        html_str += `<div class="fb" id="fb-${sid}-${qi}"></div>`;
+      }
+
+      html_str += `</div>`;
+    });
+
+    const allDone = data.questions.every((_, qi) => saved[qi] !== undefined);
+    const score = allDone ? data.questions.filter((q, qi) => saved[qi] === q.cor).length : 0;
+
+    if (!allDone) {
+      html_str += `<button class="qbtn" id="qbtn-${sid}" onclick="submitQuiz('${sid}')" ${data.questions.every((_, qi) => pending[qi] !== undefined) ? '' : 'disabled'}>
+        <i class="fa-solid fa-paper-plane"></i> Comprobar respuestas
+      </button>`;
+    }
+
+    const bannerCls = allDone ? (score === data.total ? 'qdone p show' : score >= data.total * 0.5 ? 'qdone g show' : 'qdone r show') : 'qdone';
+    const bannerIcon = score === data.total ? 'fa-trophy' : score >= data.total * 0.5 ? 'fa-star-half-stroke' : 'fa-rotate-right';
+    const bannerMsg = score === data.total ? 'Todas correctas. Ya puedes continuar.' : `${score}/${data.total} correctas. Revisa las explicaciones y vuelve a intentarlo para continuar.`;
+
+    html_str += `<div class="${bannerCls}" id="qdone-${sid}">
+      <i class="fa-solid ${bannerIcon}"></i> ${bannerMsg}
+    </div>`;
+
+    if (allDone && score === data.total) {
+      const next = SECTIONS[SECTIONS.indexOf(sid) + 1];
+      html_str += `<a class="qbtn" href="#${next || 'exam'}">${next ? 'Siguiente tema' : 'Ir al examen'}</a>`;
+    } else if (allDone) {
+      html_str += `<button class="qbtn" onclick="retryQuiz('${sid}')">Intentar con otras preguntas</button>`;
+    }
+    container.innerHTML = html_str;
+    updateQuizBadge(sid);
+
+    if (allDone && score === data.total) markSectionDone(sid);
+  });
+}
+
+function selectOpt(sid, qi, oi) {
+  const saved = state['quiz_' + sid] || {};
+  if (saved[qi] !== undefined) return;
+
+  document.querySelectorAll(`#qb-${sid}-${qi} .opt`).forEach((option, index) => {
+    option.classList.toggle('sel', index === oi);
+    option.setAttribute('aria-pressed', index === oi);
+  });
+
+  if (!state['quiz_sel_' + sid]) state['quiz_sel_' + sid] = {};
+  state['quiz_sel_' + sid][qi] = oi;
+  saveState();
+
+  // Enable submit if all selected
+  const qdata = QUIZZES[sid];
+  const allSel = qdata.questions.every((_, qi2) =>
+    state['quiz_sel_' + sid] && state['quiz_sel_' + sid][qi2] !== undefined
+  );
+  const btn = document.getElementById('qbtn-' + sid);
+  if (btn) btn.disabled = !allSel;
+}
+
+function refreshQuiz(sid) {
+  buildQuizzes([sid]);
+  const container = document.getElementById('qbody-' + sid);
+  renderModuleMath(container);
+  container.querySelector('button:not(:disabled), a')?.focus({ preventScroll: true });
+}
+
+function submitQuiz(sid) {
+  const selections = state['quiz_sel_' + sid] || {};
+  if (!QUIZZES[sid].questions.every((_, qi) => selections[qi] !== undefined)) return;
+  state['quiz_' + sid] = { ...selections };
+  saveState();
+  refreshQuiz(sid);
+}
+
+function retryQuiz(sid) {
+  delete state['quiz_' + sid];
+  delete state['quiz_sel_' + sid];
+  QUIZZES[sid].questions = newQuiz(sid);
+  saveState();
+  refreshQuiz(sid);
+}
+
+function updateQuizBadge(sid) {
+  const badge = document.getElementById('qbadge-' + sid);
+  if (!badge) return;
+  const saved = state['quiz_' + sid] || {};
+  const qdata = QUIZZES[sid];
+  const answered = Object.keys(saved).length;
+  const score = qdata.questions.filter((q, qi) => saved[qi] === q.cor).length;
+  if (answered === qdata.total) {
+    badge.textContent = `${score} / ${qdata.total}`;
+    badge.style.color = score === qdata.total ? 'var(--ok)' : score >= qdata.total * 0.5 ? 'var(--warn)' : 'var(--err)';
+  } else {
+    badge.textContent = `0 / ${qdata.total}`;
+    badge.style.removeProperty('color');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// EXAMEN FINAL
+// ═══════════════════════════════════════════════════════
+function newExam() {
+  return makeAttempt(EXAM_BANK, examVariants).map(question => {
+    const answer = question.opts[question.cor];
+    if (question.numeric && !answer.endsWith('%')) return { ...question, written: true };
+    return question;
+  });
+}
+let EXAM_DATA = state.examAttempt?.questions || newExam();
+let examIdx = state.examAttempt?.index ?? 0;
+let examAnswers = state.examAttempt?.answers || {};
+let examSubmitted = state.examAttempt?.submitted ?? false;
+
+function saveExam() {
+  state.examAttempt = { questions: EXAM_DATA, index: examIdx, answers: examAnswers, submitted: examSubmitted };
+  saveState();
+}
+
+function correctExamAnswer(question, answer) {
+  if (!question.written) return answer === question.cor;
+  const raw = String(answer ?? '').trim().replace(',', '.');
+  if (!/^[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:e[+-]?[0-9]+)?$/i.test(raw)) return false;
+  const value = Number(raw);
+  const correct = Number(question.opts[question.cor]);
+  return Number.isFinite(value) && Math.abs(value - correct) <= Math.abs(correct) * 1e-10;
+}
+
+function examRender() {
+  const q = EXAM_DATA[examIdx];
+  const letters = ['A','B','C','D'];
+  document.getElementById('exam-qn').textContent = `Pregunta ${examIdx + 1} de ${EXAM_DATA.length}`;
+  document.getElementById('exam-qtxt').textContent = q.text;
+  document.getElementById('exam-q-label').textContent = `Pregunta ${examIdx + 1} de ${EXAM_DATA.length}`;
+  document.getElementById('exam-prog').style.width = ((examIdx + 1) / EXAM_DATA.length * 100) + '%';
+
+  const optsEl = document.getElementById('exam-opts');
+  optsEl.innerHTML = '';
+  if (q.written) {
+    const label = document.createElement('label');
+    label.textContent = 'Escribe tu respuesta numérica';
+    const input = document.createElement('input');
+    input.className = 'exam-number';
+    input.inputMode = 'decimal';
+    input.autocomplete = 'off';
+    input.value = examAnswers[examIdx] ?? '';
+    input.addEventListener('input', () => {
+      if (input.value.trim()) examAnswers[examIdx] = input.value;
+      else delete examAnswers[examIdx];
+      saveExam();
+    });
+    label.appendChild(input);
+    optsEl.appendChild(label);
+  } else q.opts.forEach((o, oi) => {
+    const div = document.createElement('button');
+    div.type = 'button';
+    div.setAttribute('aria-pressed', examAnswers[examIdx] === oi);
+    div.className = 'opt' + (examAnswers[examIdx] === oi ? ' sel' : '');
+    div.innerHTML = `<span class="opt-l">${letters[oi]}</span><span>${o}</span>`;
+    if (!examSubmitted) div.onclick = () => examSelect(oi);
+    optsEl.appendChild(div);
+  });
+
+  document.getElementById('exam-prev').disabled = examIdx === 0;
+  const nextBtn = document.getElementById('exam-next');
+  if (examIdx === EXAM_DATA.length - 1) {
+    nextBtn.innerHTML = '<i class="fa-solid fa-check"></i> Finalizar';
+    nextBtn.onclick = () => examFinish();
+  } else {
+    nextBtn.innerHTML = 'Siguiente <i class="fa-solid fa-arrow-right"></i>';
+    nextBtn.onclick = () => examNav(1);
+  }
+}
+
+function examSelect(oi) {
+  examAnswers[examIdx] = oi;
+  saveExam();
+  document.querySelectorAll('#exam-opts .opt').forEach((el, i) => {
+    el.classList.toggle('sel', i === oi);
+    el.setAttribute('aria-pressed', i === oi);
+  });
+}
+
+function examNav(dir) {
+  examIdx = Math.max(0, Math.min(EXAM_DATA.length - 1, examIdx + dir));
+  saveExam();
+  examRender();
+  document.getElementById('exam-qtxt').focus({ preventScroll: true });
+}
+
+function examFinish() {
+  const unanswered = EXAM_DATA.length - Object.keys(examAnswers).length;
+  if (unanswered > 0) {
+    if (!confirm(`Tienes ${unanswered} pregunta(s) sin responder. ¿Finalizar de todos modos?`)) return;
+  }
+  examSubmitted = true;
+  const score = EXAM_DATA.filter((q, i) => correctExamAnswer(q, examAnswers[i])).length;
+  state.exam_score = score;
+  saveExam();
+  examShowResults(score);
+  updateProgress();
+}
+
+function examShowResults(score) {
+  document.getElementById('exam-active').style.display = 'none';
+  const res = document.getElementById('exam-results');
+  res.classList.add('show');
+
+  const circle = document.getElementById('score-circle');
+  circle.textContent = `${score}/15`;
+  circle.className = 'score-circle ' + (score >= 10 ? 'p' : 'f');
+
+  document.getElementById('score-msg').textContent =
+    score >= 10 ? 'Módulo aprobado' : 'Examen no aprobado. Necesitas al menos 10 aciertos.';
+  document.getElementById('score-sub').textContent = `${score} de 15 correctas · ${Math.round(score/15*100)}%`;
+
+  const reviewEl = document.getElementById('exam-review-items');
+  reviewEl.innerHTML = '';
+  EXAM_DATA.forEach((q, i) => {
+    const ans = examAnswers[i];
+    const correct = correctExamAnswer(q, ans);
+    const letters = ['A','B','C','D'];
+    const div = document.createElement('div');
+    div.className = 'ri';
+    div.innerHTML = `<div class="ri-head">
+      <span class="ico ${correct ? 'ok' : 'err'}"><i class="fa-solid ${correct ? 'fa-check-circle' : 'fa-times-circle'}"></i></span>
+      <span><strong>P${i+1}:</strong> ${q.text}</span>
+    </div>
+    <div class="ri-exp">
+      ${!correct ? `<strong>Tu respuesta:</strong> <span class="review-answer"></span><br>
+      <strong>Correcta:</strong> ${q.written ? '' : letters[q.cor] + ') '} ${q.opts[q.cor]}<br><br>` : ''}
+      <strong>Explicación:</strong> ${q.exp}
+    </div>`;
+    if (!correct) div.querySelector('.review-answer').textContent =
+      ans === undefined ? 'Sin responder' : q.written ? ans : letters[ans] + ') ' + q.opts[ans];
+    reviewEl.appendChild(div);
+  });
+
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(res, {
+      delimiters: [{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}]
+    });
+  }
+}
+
+function examReset() {
+  EXAM_DATA = newExam();
+  examIdx = 0;
+  examAnswers = {};
+  examSubmitted = false;
+  delete state.exam_score;
+  saveExam();
+  document.getElementById('exam-results').classList.remove('show');
+  document.getElementById('exam-active').style.display = '';
+  document.getElementById('sb-score').textContent = '';
+  examRender();
+  updateProgress();
+}
+
+// ═══════════════════════════════════════════════════════
+// CALCULADORAS
+// ═══════════════════════════════════════════════════════
+function calcRound() {
+  const raw = document.getElementById('c-round-num').value.trim().replace(',', '.');
+  const num = readNumber('c-round-num');
+  const dec = readNumber('c-round-dec');
+  if (!Number.isFinite(num) || !Number.isInteger(dec) || dec < 0 || dec > 10) {
+    return calcFeedback('round', 'Ingresa un número y entre 0 y 10 decimales enteros.');
+  }
+
+  const [coefficient, exponent = '0'] = raw.toLowerCase().split('e');
+  const [whole, fraction = ''] = coefficient.replace(/^[-+]/, '').split('.');
+  const digits = BigInt((whole + fraction) || '0');
+  const shift = Number(exponent) - fraction.length + dec;
+  // Separar dígitos evita que el punto flotante cambie un empate decimal.
+  if (!Number.isInteger(shift) || Math.abs(shift) > 1000) {
+    return calcFeedback('round', 'Usa un exponente decimal entre −900 y 900.');
+  }
+  const divisor = 10n ** BigInt(Math.max(0, -shift));
+  const scaled = digits * 10n ** BigInt(Math.max(0, shift));
+  const quotient = scaled / divisor;
+  const sign = raw.startsWith('-') ? -1n : 1n;
+  const truncated = Number((sign * quotient) + 'e-' + dec);
+  const rounded = Number((sign * (quotient + (2n * (scaled % divisor) >= divisor ? 1n : 0n))) + 'e-' + dec);
+  if (!Number.isFinite(rounded)) return calcFeedback('round', 'El resultado excede el rango numérico.');
+  calcFeedback('round');
+  const etrunc = Math.abs(num - truncated);
+  const eround = Math.abs(num - rounded);
+
+  document.getElementById('rr-orig').textContent = num;
+  document.getElementById('rr-trunc').textContent = truncated.toFixed(dec);
+  document.getElementById('rr-round').textContent = rounded.toFixed(dec);
+  document.getElementById('rr-etrunc').textContent = etrunc.toExponential(4);
+  document.getElementById('rr-eround').textContent = eround.toExponential(4);
+  document.getElementById('res-round').classList.add('show');
+  showChart('round', 'Error absoluto por método', ['Truncamiento', 'Redondeo'], [etrunc, eround]);
+}
+
+function calcError() {
+  const xv = readNumber('c-xv');
+  const xa = readNumber('c-xa');
+  const eabs = Math.abs(xv - xa);
+  if (!Number.isFinite(eabs)) return calcFeedback('err', 'Ingresa dos valores finitos cuya diferencia sea representable.');
+  const erel = xv === 0 ? undefined : eabs / Math.abs(xv);
+  calcFeedback('err', xv === 0 ? 'El error relativo y el porcentual quedan indefinidos porque el valor verdadero es cero.' :
+    eabs === 0 ? 'Los valores coinciden.' : '', true);
+  document.getElementById('re-abs').textContent = eabs.toExponential(6);
+  document.getElementById('re-rel').textContent = formatRelative(erel);
+  document.getElementById('re-pct').textContent = formatRelative(erel, true);
+  document.getElementById('re-dig').textContent = eabs === 0 ? 'Coincidencia exacta' :
+    Math.max(0, Math.floor(Math.log10(0.5) - Math.log10(eabs))) + ' según el umbral 0.5 × 10⁻ⁿ';
+  document.getElementById('res-err').classList.add('show');
+  showChart('err', 'Valores comparados', ['Verdadero', 'Aproximado'], [xv, xa]);
+}
+
+function calcSig() {
+  const raw = document.getElementById('c-sig').value.trim().replace(',', '.');
+  const match = raw.match(/^[+-]?([0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:e[+-]?[0-9]+)?$/i);
+  const num = Number(raw);
+  if (!match || !Number.isFinite(num)) return calcFeedback('sig', 'Ingresa un número decimal o en notación científica.');
+  const coefficient = match[1];
+  const allDigits = coefficient.replace('.', '');
+  const significant = allDigits.replace(/^0+/, '');
+  if (num === 0) return calcFeedback('sig', 'Usa un valor distinto de cero para estimar la precisión relativa.');
+  const sigDigits = coefficient.includes('.') || /e/i.test(raw) ? significant : significant.replace(/0+$/, '');
+  const sigFigs = sigDigits.length;
+  if (sigFigs > 15) return calcFeedback('sig', 'Usa hasta 15 cifras significativas para la precisión de esta calculadora.');
+  calcFeedback('sig', !coefficient.includes('.') && !/e/i.test(raw) && /0$/.test(coefficient) ?
+    'Se omiten los ceros finales del entero. Usa notación científica para indicar cuáles cuentan.' : '', true);
+
+  const erel = 0.5 * Math.pow(10, 1 - sigFigs);
+  const sci = num.toExponential(sigFigs - 1);
+
+  document.getElementById('rs-count').textContent = sigFigs;
+  document.getElementById('rs-er').textContent = Number((erel * 100).toPrecision(4)) + '%';
+  document.getElementById('rs-sci').textContent = sci;
+  document.getElementById('rs-digits').textContent = sigDigits.split('').join(', ');
+  document.getElementById('res-sig').classList.add('show');
+  showChart('sig', 'Cifras del coeficiente', ['Significativas', 'Omitidas'], [sigFigs, allDigits.length - sigFigs]);
+}
+
+function readNumber(id) {
+  const raw = document.getElementById(id).value.trim().replace(',', '.');
+  return raw ? Number(raw) : NaN;
+}
+
+function formatRelative(value, percent = false) {
+  const scaled = percent ? value * 100 : value;
+  return Number.isFinite(scaled) ? (percent ? scaled.toPrecision(4) + '%' : scaled.toExponential(4)) :
+    value === undefined ? 'Indefinido' : 'Fuera de rango';
+}
+
+const charts = new Map();
+
+function calcFeedback(id, message = '', keepResult = false) {
+  const status = document.getElementById('status-' + id);
+  status.textContent = message;
+  status.hidden = !message;
+  if (message && !keepResult) {
+    document.getElementById('res-' + id).classList.remove('show');
+    charts.get(id)?.chart?.destroy();
+    charts.delete(id);
+    document.getElementById('chart-' + id).hidden = true;
+  }
+}
+
+function showChart(id, title, labels, data, type = 'bar', log = false) {
+  const wrap = document.getElementById('chart-' + id);
+  charts.get(id)?.chart?.destroy();
+  wrap.hidden = false;
+  const canvas = wrap.querySelector('canvas');
+  const caption = wrap.querySelector('figcaption');
+  caption.textContent = title;
+  if (typeof Chart === 'undefined') {
+    caption.textContent += ' · Gráfico no disponible. Consulta los valores de arriba.';
+    return;
+  }
+  const colors = getComputedStyle(document.documentElement);
+  const accent = colors.getPropertyValue('--accent').trim();
+  const axis = { ticks: { color: colors.getPropertyValue('--ink-2').trim() },
+    grid: { color: colors.getPropertyValue('--line').trim() } };
+  const chart = new Chart(canvas, {
+    type,
+    data: { labels, datasets: [{ label: title, data, borderColor: accent, backgroundColor: accent,
+      borderRadius: 5, pointRadius: 4, pointHoverRadius: 7 }] },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      animation: matchMedia('(prefers-reduced-motion: reduce)').matches ? false : { duration: 550 },
+      interaction: { mode: 'nearest', intersect: false },
+      scales: { x: axis, y: { ...axis, type: log ? 'logarithmic' : 'linear', beginAtZero: !log } },
+      plugins: { legend: { display: false } }
+    }
+  });
+  charts.set(id, { id, title, labels, data, type, log, chart });
+}
+
+function calcProp() {
+  const op = document.getElementById('c-op').value;
+  const u = readNumber('c-u');
+  const du = readNumber('c-du');
+  const v = readNumber('c-v');
+  const dv = op === 'pow' ? 0 : readNumber('c-dv');
+  if (![u, v, du, dv].every(Number.isFinite) || du < 0 || dv < 0) {
+    return calcFeedback('prop', 'Ingresa valores finitos e incertidumbres iguales o mayores que cero.');
+  }
+  if (op === 'div' && Math.abs(v) <= dv) {
+    return calcFeedback('prop', 'El intervalo del denominador incluye cero. Ajusta v o Δv.');
+  }
+  if (op === 'pow' && (!Number.isInteger(v) && u - du <= 0 || v < 0 && Math.abs(u) <= du)) {
+    return calcFeedback('prop', 'La potencia no está definida en todo el intervalo de la base.');
+  }
+  const operations = {
+    add: () => [u + v, du, dv],
+    sub: () => [u - v, du, dv],
+    mul: () => [u * v, Math.abs(v) * du, Math.abs(u) * dv],
+    div: () => [u / v, du / Math.abs(v), Math.abs(u / v) * (dv / Math.abs(v))],
+    pow: () => [u ** v, v === 0 ? 0 : Math.abs(v * u ** (v - 1)) * du, 0]
+  };
+  const [res, contributionU, contributionV] = operations[op]();
+  const eabs = contributionU + contributionV;
+  if (![res, eabs, res - eabs, res + eabs].every(Number.isFinite)) {
+    return calcFeedback('prop', 'El resultado o la incertidumbre exceden el rango numérico.');
+  }
+  const erel = res === 0 ? undefined : eabs / Math.abs(res);
+  calcFeedback('prop', op === 'add' || op === 'sub' ? '' :
+    'Estimación de primer orden. Úsala cuando las incertidumbres sean pequeñas.', true);
+  document.getElementById('rp-res').textContent = res.toPrecision(6);
+  document.getElementById('rp-abs').textContent = eabs.toExponential(4);
+  document.getElementById('rp-rel').textContent = formatRelative(erel);
+  document.getElementById('rp-pct').textContent = formatRelative(erel, true);
+  document.getElementById('rp-full').textContent = `${res.toPrecision(5)} ± ${eabs.toPrecision(3)}`;
+  document.getElementById('res-prop').classList.add('show');
+  showChart('prop', 'Aportes al error absoluto', op === 'pow' ? ['Base', 'Total'] : ['Δu', 'Δv', 'Total'],
+    op === 'pow' ? [contributionU, eabs] : [contributionU, contributionV, eabs]);
+}
+
+function calcConv() {
+  const errors = document.getElementById('c-conv').value.trim().split(/\s+/).map(raw => Number(raw.replace(',', '.')));
+  if (errors.length < 3 || errors.length > 200 || errors.some(value => !Number.isFinite(value) || value <= 0)) {
+    return calcFeedback('conv', 'Ingresa entre 3 y 200 errores positivos, separados por espacios o saltos de línea.');
+  }
+  const logs = errors.map(Math.log);
+  const orders = [];
+  for (let i = 1; i < logs.length - 1; i++) {
+    const order = (logs[i + 1] - logs[i]) / (logs[i] - logs[i - 1]);
+    if (Number.isFinite(order)) orders.push(order);
+  }
+  const decreasing = errors.every((error, i) => i === 0 || error < errors[i - 1]);
+  const avgP = orders.length && decreasing ? orders.reduce((sum, order) => sum + order, 0) / orders.length : NaN;
+  const factor = Math.exp(logs.at(-1) - avgP * logs.at(-2));
+  let type = 'Sin estimación';
+  if (Number.isFinite(avgP)) {
+    if (Math.abs(avgP - 1) < 0.05) type = 'Lineal (p ≈ 1)';
+    else if (Math.abs(avgP - 2) < 0.05) type = 'Cuadrática (p ≈ 2)';
+    else if (Math.abs(avgP - 3) < 0.05) type = 'Cúbica (p ≈ 3)';
+    else type = avgP < 1 ? 'Sublineal' : 'Superlineal';
+  }
+  calcFeedback('conv', decreasing ? '' : 'La secuencia no es estrictamente decreciente. Se muestra la gráfica sin estimar el orden.', true);
+  document.getElementById('rc-p').textContent = Number.isFinite(avgP) ? avgP.toFixed(3) : '—';
+  document.getElementById('rc-type').textContent = type;
+  document.getElementById('rc-c').textContent = Number.isFinite(factor) ? factor.toPrecision(4) : '—';
+  document.getElementById('res-conv').classList.add('show');
+  showChart('conv', 'Error por iteración (escala logarítmica)', errors.map((_, index) => 'n=' + index), errors, 'line', true);
+}
+
+// Update v label for power
+document.getElementById('c-op').addEventListener('change', function() {
+  const lbl = document.getElementById('c-v-label');
+  const dvField = document.getElementById('c-dv-field');
+  if (this.value === 'pow') {
+    lbl.textContent = '(exponente n)';
+    dvField.style.visibility = 'hidden';
+  } else {
+    lbl.textContent = '';
+    dvField.style.visibility = 'visible';
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+// INICIALIZAR
+// ═══════════════════════════════════════════════════════
+function renderModuleMath(root) {
+  if (typeof renderMathInElement !== 'undefined') {
+    renderMathInElement(root, {
+      delimiters: [
+        {left: '\\(', right: '\\)', display: false},
+        {left: '\\[', right: '\\]', display: true}
+      ],
+      throwOnError: false
+    });
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const examples = {"round": {"ids": ["c-round-num", "c-round-dec"], "values": ["3.145", "2"]}, "err": {"ids": ["c-xv", "c-xa"], "values": ["3.14159265", "3.14"]}, "sig": {"ids": ["c-sig"], "values": ["0.00450"]}, "prop": {"ids": ["c-u", "c-du", "c-v", "c-dv"], "values": ["3", "0.1", "2", "0.05"]}, "conv": {"ids": ["c-conv"], "values": ["0.5\n0.25\n0.125\n0.0625"]}};
+  document.querySelectorAll('[data-example]').forEach(button => {
+    button.addEventListener('click', () => {
+      const example = examples[button.dataset.example];
+      example.ids.forEach((id, index) => {
+        document.getElementById(id).value = example.values[index];
+      });
+      if (button.dataset.example === 'prop') {
+        const op = document.getElementById('c-op');
+        op.value = 'mul';
+        op.dispatchEvent(new Event('change'));
+      }
+      button.previousElementSibling.click();
+    });
+  });
+  buildQuizzes();
+  if (examSubmitted) examShowResults(state.exam_score);
+  else examRender();
+  saveExam();
+  updateProgress();
+
+  renderModuleMath(document.body);
+  document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', () => {
+      document.getElementById('topics-btn').setAttribute('aria-expanded', 'false');
+      if (link.hash === location.hash) showModuleView({ focusHeading: true });
+    });
+  });
+
+  showModuleView();
+  window.addEventListener('hashchange', () => showModuleView({ focusHeading: true }));
+});
+</script>
+</body>
+</html>

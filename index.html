@@ -1,0 +1,1549 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ITERA: ruta de aprendizaje de Métodos Numéricos para Ingeniería de Sistemas (UNSA). Ocho capítulos, desde la teoría del error hasta la optimización y la validación de algoritmos.">
+  <meta name="theme-color" content="#14212e">
+  <title>ITERA Learn | Aprende Métodos Numéricos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23c2410c'/%3E%3Cpath d='M5 20c3 0 4-9 7-9s4 10 7 10 4-7 8-7' fill='none' stroke='white' stroke-width='2.6' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Sora:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <style>
+    :root{
+      --bg:#fbfaf7; --surface:#ffffff; --surface-2:#f4f1ea;
+      --ink:#14212e; --ink-2:#3b4a5a; --muted:#5f6c78; --line:#e6e0d4;
+      --accent:#c2410c; --accent-hover:#9a3412; --accent-soft:#fdeee4; --accent-bright:#f4581c; --on-accent:#ffffff;
+      --navy:#14212e; --on-navy:#c9d3dc; --navy-line:#24384a;
+      --ok:#2f7a5b; --ok-soft:#e5f2ec;
+      --radius:14px; --radius-lg:20px;
+      --shadow:0 1px 2px rgba(20,33,46,.05),0 10px 30px rgba(20,33,46,.07);
+      --header-h:68px;
+      --font-body:"DM Sans",system-ui,sans-serif;
+      --font-head:"Sora","DM Sans",system-ui,sans-serif;
+      --font-mono:"JetBrains Mono",ui-monospace,monospace;
+    }
+    @media (prefers-color-scheme: dark){
+      :root:not([data-theme="light"]){
+        --bg:#0f1720; --surface:#16212c; --surface-2:#1c2935;
+        --ink:#e8eef3; --ink-2:#c3cfd9; --muted:#97a6b4; --line:#2a3846;
+        --accent:#fb8a5a; --accent-hover:#ffa47e; --accent-soft:#2c1e17; --accent-bright:#fb7c46; --on-accent:#1a0f08;
+        --navy:#0b121a; --on-navy:#b4c2ce; --navy-line:#1f2e3c;
+        --ok:#5cc29a; --ok-soft:#14302a;
+        --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25);
+      }
+    }
+    :root[data-theme="dark"]{
+      --bg:#0f1720; --surface:#16212c; --surface-2:#1c2935;
+      --ink:#e8eef3; --ink-2:#c3cfd9; --muted:#97a6b4; --line:#2a3846;
+      --accent:#fb8a5a; --accent-hover:#ffa47e; --accent-soft:#2c1e17; --accent-bright:#fb7c46; --on-accent:#1a0f08;
+      --navy:#0b121a; --on-navy:#b4c2ce; --navy-line:#1f2e3c;
+      --ok:#5cc29a; --ok-soft:#14302a;
+      --shadow:0 1px 2px rgba(0,0,0,.3),0 10px 30px rgba(0,0,0,.25);
+    }
+
+    *,*::before,*::after{box-sizing:border-box}
+    *{margin:0;padding:0}
+    html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+    body{font-family:var(--font-body);font-size:16px;line-height:1.6;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+    body.nav-open{overflow:hidden}
+    h1,h2,h3,h4{font-family:var(--font-head);line-height:1.18;letter-spacing:-.02em}
+    body{font-size:16.5px}
+    .hero h1{letter-spacing:-.035em;line-height:1.08}
+    a{color:inherit;text-decoration:none}
+    img,svg{display:block;max-width:100%}
+    ul,ol{list-style:none}
+    button,input{font:inherit;color:inherit}
+    :focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+    [id]{scroll-margin-top:calc(var(--header-h) + 16px)}
+
+    .container{width:100%;max-width:1160px;margin-inline:auto;padding-inline:16px}
+    @media (min-width:640px){.container{padding-inline:24px}}
+
+    .skip-link{position:absolute;left:16px;top:-48px;z-index:200;background:var(--accent);color:var(--on-accent);padding:10px 16px;border-radius:10px;font-weight:600}
+    .skip-link:focus{top:12px}
+
+    /* Botones */
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:46px;padding:0 20px;border-radius:12px;font-weight:600;font-size:15px;border:1px solid transparent;cursor:pointer;transition:background .2s,border-color .2s,color .2s,transform .2s}
+    .btn-primary{background:var(--accent);color:var(--on-accent)}
+    .btn-primary:hover{background:var(--accent-hover)}
+    .btn-secondary{background:var(--surface);border-color:var(--line);color:var(--ink)}
+    .btn-secondary:hover{border-color:var(--accent);color:var(--accent)}
+    .btn-sm{min-height:40px;padding:0 16px;font-size:14px;border-radius:10px}
+
+    /* Encabezado */
+    .site-header{position:sticky;top:0;z-index:100;border-bottom:1px solid var(--line)}
+    /* El desenfoque va en un pseudo-elemento: en el propio header crearía un bloque contenedor y el menú fixed quedaría atrapado */
+    .site-header::before{content:"";position:absolute;inset:0;z-index:-1;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:saturate(1.4) blur(10px);-webkit-backdrop-filter:saturate(1.4) blur(10px)}
+    .header-inner{display:flex;align-items:center;gap:16px;height:var(--header-h)}
+    .brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+    .brand-mark{width:38px;height:38px;flex:none;border-radius:10px;background:var(--accent);color:var(--on-accent);display:grid;place-items:center;font-size:16px}
+    .brand-text{display:flex;flex-direction:column;min-width:0}
+    .brand-text strong{font:800 19px/1.1 var(--font-head);letter-spacing:.04em}
+    .brand-text small{font-size:12px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    .site-nav ul{display:flex;align-items:center;gap:2px}
+    .site-nav a{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:14px;font-weight:500;color:var(--ink-2);white-space:nowrap;transition:background .15s,color .15s}
+    .header-cta{white-space:nowrap}
+    .site-nav a i{display:none}
+    .site-nav a:hover{background:var(--surface-2);color:var(--ink)}
+    .site-nav a[aria-current="true"]{color:var(--accent);background:var(--accent-soft)}
+    .nav-head,.nav-foot{display:none}
+    .menu-toggle{display:none;width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:18px}
+    .nav-backdrop{display:none}
+
+    @media (max-width:1179px){
+      .header-cta{display:none}
+      .menu-toggle{display:grid;place-items:center}
+      .site-nav{position:fixed;inset:0 0 0 auto;width:min(340px,88vw);background:var(--surface);border-left:1px solid var(--line);box-shadow:-20px 0 60px rgba(0,0,0,.2);z-index:120;display:flex;flex-direction:column;padding:16px;overflow-y:auto;transform:translateX(105%);visibility:hidden;transition:transform .3s ease,visibility 0s linear .3s}
+      .site-nav.open{transform:none;visibility:visible;transition:transform .3s ease}
+      .nav-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;margin-bottom:10px;border-bottom:1px solid var(--line)}
+      .nav-head strong{font:800 18px var(--font-head);letter-spacing:.04em}
+      .nav-close{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);cursor:pointer;font-size:16px}
+      .site-nav ul{flex-direction:column;align-items:stretch;gap:4px}
+      .site-nav a{padding:12px;font-size:16px}
+      .site-nav a i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--surface-2);color:var(--accent);font-size:14px}
+      .site-nav a[aria-current="true"] i{background:var(--accent);color:var(--on-accent)}
+      .nav-foot{display:block;margin-top:auto;padding-top:16px}
+      .nav-foot .btn{width:100%}
+      .nav-backdrop{display:block;position:fixed;inset:0;z-index:110;background:rgba(10,16,22,.5);opacity:0;pointer-events:none;transition:opacity .25s}
+      .nav-backdrop.show{opacity:1;pointer-events:auto}
+    }
+    @media (max-width:420px){.brand-text small{display:none}}
+
+    /* Secciones */
+    section{padding-block:72px}
+    @media (max-width:640px){section{padding-block:52px}}
+    .section-alt{background:var(--surface);border-block:1px solid var(--line)}
+    .section-head{max-width:720px;margin-bottom:36px}
+    .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+    .section-head h2{font-size:clamp(1.65rem,3.2vw,2.25rem);font-weight:800;margin-bottom:12px}
+    .section-head p{color:var(--ink-2);font-size:17px}
+
+    /* Hero */
+    .hero{padding-block:64px 72px}
+    .hero-grid{display:grid;gap:48px;align-items:center}
+    @media (min-width:960px){.hero-grid{grid-template-columns:1.1fr .9fr}}
+    .hero h1{font-size:clamp(2.1rem,5vw,3.4rem);font-weight:800;letter-spacing:-.02em;margin-bottom:18px}
+    .hero h1 em{font-style:normal;color:var(--accent)}
+    .hero .lead{font-size:clamp(1.02rem,1.6vw,1.15rem);color:var(--ink-2);max-width:560px;margin-bottom:28px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px}
+    .hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:520px}
+    .hero-stats div{padding:14px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+    .hero-stats b{display:block;font:800 26px/1.1 var(--font-head)}
+    .hero-stats span{font-size:13px;color:var(--muted)}
+    @media (max-width:520px){
+      .hero-actions .btn{flex:1 1 100%}
+      .hero-stats{gap:8px}
+      .hero-stats div{padding:12px}
+      .hero-stats b{font-size:22px}
+      .hero-stats span{font-size:12px}
+    }
+
+    .demo-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:22px;min-width:0}
+    .demo-top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+    .demo-top h2{font-size:16px;font-weight:700;display:flex;align-items:center;gap:10px}
+    .demo-top h2 i{color:var(--accent)}
+    .chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);white-space:nowrap}
+    .chip-ok{background:var(--ok-soft);color:var(--ok)}
+    .formula{display:flex;flex-wrap:wrap;gap:4px 20px;font-family:var(--font-mono);font-size:14px;background:var(--surface-2);border-radius:10px;padding:10px 12px;margin-bottom:14px}
+    .formula span{white-space:nowrap}
+    .demo-table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+    .demo-table th{font-size:12px;font-weight:600;color:var(--muted);text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+    .demo-table td{padding:7px 8px;border-bottom:1px solid var(--line);font-family:var(--font-mono);font-size:13px}
+    .demo-table td:first-child{color:var(--muted)}
+    .demo-table tr:last-child td{border-bottom:0}
+    .demo-table .ok{color:var(--ok);font-weight:600}
+    .table-scroll{overflow-x:auto}
+    .digits{margin-top:18px}
+    .digits-label{font-size:13px;color:var(--muted);margin-bottom:28px}
+    .digits-chart{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:end;height:110px;border-bottom:1px solid var(--line)}
+    .digits-chart .bar{position:relative;background:var(--accent-bright);border-radius:6px 6px 2px 2px;min-height:4px;opacity:.9}
+    .digits-chart .bar span{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:600;color:var(--ink-2);font-variant-numeric:tabular-nums}
+    .digits-axis{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;text-align:center;font-size:12px;color:var(--muted);margin-top:6px}
+    .demo-note{font-size:13px;color:var(--muted);margin-top:14px}
+
+    /* Ruta de aprendizaje */
+    .path-group{margin-bottom:40px}
+    .path-group:last-child{margin-bottom:0}
+    .path-group-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+    .path-group-head h3{font-size:19px;font-weight:700}
+    .path-group-head p{font-size:14px;color:var(--muted)}
+    .chapter-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+    .chapter-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:20px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);transition:border-color .2s,box-shadow .2s,transform .2s}
+    .chapter-card:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line));box-shadow:var(--shadow);transform:translateY(-2px)}
+    .chapter-card .top{display:flex;align-items:center;justify-content:space-between}
+    .chapter-card .num{font:800 14px var(--font-mono);color:var(--muted)}
+    .chapter-card .ico{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:17px}
+    .chapter-card h4{font-size:17px;font-weight:700}
+    .chapter-card p{font-size:14px;color:var(--ink-2);flex:1}
+    .chapter-card .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+    .chapter-card .foot a{display:inline-flex;align-items:center;gap:6px;font-weight:600;color:var(--accent)}
+    .chapter-card .foot a::after{content:"";position:absolute;inset:0;border-radius:var(--radius)}
+    .chapter-card.systems{border-style:dashed}
+
+    /* Temario */
+    .toolbar{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px}
+    .search{position:relative;flex:1 1 280px}
+    .search i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted);pointer-events:none}
+    .search input{width:100%;min-height:46px;padding:0 14px 0 42px;border:1px solid var(--line);border-radius:12px;background:var(--surface);font-size:15px}
+    .search input::placeholder{color:var(--muted)}
+    .search input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+    .results{font-size:14px;color:var(--muted);min-height:1.6em;margin-bottom:12px}
+    .no-results{display:none;padding:28px;text-align:center;border:1px dashed var(--line);border-radius:var(--radius);color:var(--muted)}
+    .no-results.show{display:block}
+
+    .chapter{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin-bottom:12px;overflow:hidden}
+    .chapter summary{list-style:none;display:flex;align-items:center;gap:14px;padding:16px 18px;cursor:pointer;user-select:none}
+    .chapter summary::-webkit-details-marker{display:none}
+    .chapter summary:hover{background:var(--surface-2)}
+    .chapter .ch-num{flex:none;width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font:600 14px var(--font-mono);background:var(--surface-2);color:var(--ink-2)}
+    .chapter[open] .ch-num{background:var(--accent);color:var(--on-accent)}
+    .chapter .ch-title{flex:1;min-width:0;font:700 16px/1.35 var(--font-head)}
+    .chapter .ch-meta{font-size:13px;color:var(--muted);white-space:nowrap}
+    .chapter .ch-chev{color:var(--muted);transition:transform .2s}
+    .chapter[open] .ch-chev{transform:rotate(180deg)}
+    @media (max-width:520px){.chapter .ch-meta{display:none}.chapter summary{padding:14px}}
+    .sections{padding:4px 18px 18px 72px;display:grid;gap:2px}
+    @media (max-width:520px){.sections{padding:4px 14px 16px}}
+    .sections li{min-width:0}
+    .row{display:flex;gap:12px;padding:7px 0;align-items:baseline}
+    .row .n{flex:none;min-width:44px;font:500 13px var(--font-mono);color:var(--muted)}
+    .row .t{font-size:15px;color:var(--ink);overflow-wrap:anywhere}
+    .subs{padding-left:20px;margin:0 0 6px 21px;border-left:2px solid var(--line)}
+    @media (max-width:520px){.subs{margin-left:8px;padding-left:12px}}
+    .subs .row{padding:5px 0}
+    .subs .row .t{color:var(--ink-2);font-size:14.5px}
+    mark{background:color-mix(in srgb,var(--accent-bright) 28%,transparent);color:inherit;border-radius:3px;padding:0 1px}
+    .is-hidden{display:none !important}
+
+    /* Metodología */
+    .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;counter-reset:step}
+    .step{position:relative;padding:22px 20px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg)}
+    .step .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:18px;margin-bottom:14px}
+    .step::before{counter-increment:step;content:"0" counter(step);position:absolute;top:20px;right:20px;font:600 13px var(--font-mono);color:var(--muted)}
+    .step h3{font-size:17px;font-weight:700;margin-bottom:6px}
+    .step p{font-size:14.5px;color:var(--ink-2)}
+
+    /* Aplicaciones */
+    .apps{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .app{display:flex;gap:16px;padding:20px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+    .app .ico{flex:none;width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--surface-2);color:var(--ink);font-size:17px}
+    .app h3{font-size:16px;font-weight:700;margin-bottom:4px}
+    .app p{font-size:14.5px;color:var(--ink-2);margin-bottom:10px}
+    .tags{display:flex;flex-wrap:wrap;gap:6px}
+    .tag{font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);color:var(--ink-2);transition:border-color .15s,color .15s}
+    a.tag:hover{border-color:var(--accent);color:var(--accent)}
+
+    /* Para quién */
+    .cards-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+    .info{padding:24px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg)}
+    .info h3{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;margin-bottom:12px}
+    .info h3 i{color:var(--accent)}
+    .info p,.info li{font-size:15px;color:var(--ink-2)}
+    .info ul{display:grid;gap:10px}
+    .info li{display:flex;gap:10px}
+    .info li::before{content:"\f00c";font:900 12px "Font Awesome 6 Free";color:var(--ok);margin-top:6px}
+
+    /* Equipo */
+    .team{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+    .member{display:flex;align-items:center;gap:14px;padding:18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+    .avatar{flex:none;width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font:700 16px var(--font-head);background:var(--navy);color:#fff}
+    .member b{display:block;font-size:15px;line-height:1.35}
+    .member span{font-size:13px;color:var(--muted)}
+    .team-note{margin-top:16px;font-size:14px;color:var(--muted)}
+
+    /* CTA final */
+    .cta{background:var(--navy);color:#fff;border-radius:var(--radius-lg);padding:clamp(28px,5vw,48px);display:grid;gap:24px;align-items:center}
+    @media (min-width:800px){.cta{grid-template-columns:1fr auto}}
+    .cta h2{font-size:clamp(1.4rem,3vw,1.9rem);font-weight:800;margin-bottom:8px}
+    .cta p{color:var(--on-navy)}
+    .cta .btn-primary{background:var(--accent-bright);color:#1a0f08}
+    .cta .btn-primary:hover{background:#ff7a45}
+
+    /* Pie */
+    .site-footer{background:var(--navy);color:var(--on-navy);padding-block:56px 28px;margin-top:72px}
+    .footer-grid{display:grid;gap:32px;grid-template-columns:1fr}
+    @media (min-width:720px){.footer-grid{grid-template-columns:1.6fr 1fr 1fr}}
+    .site-footer .brand-text strong{color:#fff}
+    .site-footer .brand-text small{color:var(--on-navy)}
+    .footer-about{margin-top:14px;font-size:14px;max-width:380px}
+    .site-footer h3{font-size:14px;color:#fff;margin-bottom:14px}
+    .site-footer ul{display:grid;gap:10px}
+    .site-footer li a{font-size:14px;display:inline-flex;align-items:center;gap:8px}
+    .site-footer li a:hover{color:#fff}
+    .footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:40px;padding-top:20px;border-top:1px solid var(--navy-line);font-size:13px}
+
+
+    /* ITERA Learn: extras */
+    .scroll-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent-bright);z-index:300;transition:width .1s}
+    .theme-btn{width:44px;height:44px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:16px;display:grid;place-items:center;color:var(--ink-2);transition:color .15s,border-color .15s}
+    .theme-btn:hover{color:var(--accent);border-color:var(--accent)}
+    .to-top{position:fixed;right:18px;bottom:18px;width:46px;height:46px;border-radius:50%;border:none;background:var(--accent);color:var(--on-accent);cursor:pointer;box-shadow:var(--shadow);opacity:0;pointer-events:none;transform:translateY(10px);transition:opacity .25s,transform .25s;z-index:90}
+    .to-top.show{opacity:1;pointer-events:auto;transform:none}
+    .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease}
+    .reveal.in{opacity:1;transform:none}
+    .chip-new{background:var(--ok-soft);color:var(--ok)}
+    .chip-soon{background:var(--surface-2);color:var(--muted)}
+    .chapter-card.live{border-color:var(--accent);border-width:2px;box-shadow:var(--shadow)}
+    .chapter-card.soon{opacity:.82}
+    .chapter-card.soon .ico{background:var(--surface-2);color:var(--muted)}
+    .card-bar{height:6px;border-radius:999px;background:var(--surface-2);overflow:hidden}
+    .card-bar i{display:block;height:100%;width:0;background:var(--ok);border-radius:999px;transition:width .6s ease}
+    .card-bar-label{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);margin-top:6px}
+    .card-cta{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;min-height:42px;padding:0 16px;border-radius:10px;background:var(--accent);color:var(--on-accent);font-weight:700;font-size:14px;transition:background .2s}
+    .card-cta:hover{background:var(--accent-hover)}
+    .card-cta::after{content:"";position:absolute;inset:-200px 0 0 0}
+    .m1-banner{display:grid;gap:28px;align-items:center;padding:clamp(22px,4vw,36px);border-radius:var(--radius-lg);background:var(--navy);color:#fff;margin-bottom:40px}
+    @media(min-width:860px){.m1-banner{grid-template-columns:1.3fr 1fr}}
+    .m1-banner h3{font-size:clamp(1.3rem,2.6vw,1.75rem);font-weight:800;margin:6px 0 10px}
+    .m1-banner p{color:var(--on-navy);font-size:15.5px;margin-bottom:18px}
+    .m1-banner .chip{background:rgba(255,255,255,.12);color:#fff}
+    .m1-feats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .m1-feats div{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;background:rgba(255,255,255,.07);border:1px solid var(--navy-line);font-size:14px}
+    .m1-feats i{color:var(--accent-bright);width:18px;text-align:center}
+    .m1-banner .btn-primary{background:var(--accent-bright);color:#1a0f08}
+    .m1-banner .btn-primary:hover{background:#ff7a45}
+    .progress-panel{display:grid;gap:20px;padding:24px;border:1px solid var(--line);border-radius:var(--radius-lg);background:var(--surface);box-shadow:var(--shadow);margin-top:-28px;position:relative;z-index:2}
+    @media(min-width:760px){.progress-panel{grid-template-columns:auto 1fr auto;align-items:center}}
+    .ring{--p:0;width:84px;height:84px;border-radius:50%;background:conic-gradient(var(--ok) calc(var(--p)*1%),var(--surface-2) 0);display:grid;place-items:center;position:relative}
+    .ring::before{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--surface)}
+    .ring b{position:relative;font:800 20px var(--font-head)}
+    .pp-text h3{font-size:18px;margin-bottom:4px}
+    .pp-text p{font-size:14.5px;color:var(--ink-2)}
+    .pp-dots{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+    .pp-dots span{width:28px;height:28px;border-radius:8px;display:grid;place-items:center;font:600 12px var(--font-mono);background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+    .pp-dots span.ok{background:var(--ok);border-color:var(--ok);color:#fff}
+    .feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin-bottom:40px}
+    .feat{padding:22px;border:1px solid var(--line);border-radius:var(--radius);background:var(--bg);transition:transform .2s,border-color .2s,box-shadow .2s}
+    .feat:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--accent) 45%,var(--line));box-shadow:var(--shadow)}
+    .feat .ico{width:46px;height:46px;border-radius:12px;display:grid;place-items:center;background:var(--accent-soft);color:var(--accent);font-size:19px;margin-bottom:14px}
+    .feat h3{font-size:17px;margin-bottom:6px}
+    .feat p{font-size:14.5px;color:var(--ink-2)}
+
+    /* Escena animada */
+    .scene-sec{padding-block:64px 24px}
+    .scene-wrap{overflow-x:auto;border-radius:24px;box-shadow:var(--shadow);-webkit-overflow-scrolling:touch}
+    .scene{display:block;width:100%;height:auto}
+    .scene-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:20px}
+    .scene-steps li{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+    .scene-steps li>span{flex:none;width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:var(--accent);color:var(--on-accent);font:700 15px var(--font-head)}
+    .scene-steps b{font-family:var(--font-head);font-size:16px}
+    .scene-steps p{font-size:14px;color:var(--ink-2)}
+    .arm-write{transform-origin:412px 206px;animation:write 1.1s ease-in-out infinite alternate}
+    @keyframes write{from{transform:rotate(-7deg)}to{transform:rotate(9deg)}}
+    .typing{animation:typing .28s ease-in-out infinite alternate}
+    .typing.t2{animation-delay:-.14s}
+    @keyframes typing{from{transform:translateY(0)}to{transform:translateY(3.5px)}}
+    .head-bob,.head-bob2{transform-box:fill-box;transform-origin:50% 100%;animation:nod 3.2s ease-in-out infinite}
+    .head-bob2{animation-duration:2.6s;animation-delay:-1s}
+    @keyframes nod{50%{transform:rotate(3deg)}}
+    .blink{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+    @keyframes blink{0%,92%,100%{transform:scaleY(1)}96%{transform:scaleY(.1)}}
+    .rise{animation:rise2 7s ease-in-out infinite;opacity:0}
+    @keyframes rise2{0%{opacity:0;transform:translateY(24px)}25%,70%{opacity:.55}100%{opacity:0;transform:translateY(-34px)}}
+    .tb{transform-box:fill-box;transform-origin:bottom;animation:bars 2.2s ease-in-out infinite alternate}
+    .tb.b2{animation-delay:-.7s}.tb.b3{animation-delay:-1.4s}
+    @keyframes bars{from{transform:scaleY(.35)}to{transform:scaleY(1)}}
+    .tablet{animation:tabmove 3.8s ease-in-out infinite}
+    @keyframes tabmove{50%{transform:translateY(-3px)}}
+    .pop-ok{transform-box:fill-box;transform-origin:center;animation:okpop 9s infinite}
+    @keyframes okpop{0%,70%{transform:scale(0)}76%{transform:scale(1.3)}80%,95%{transform:scale(1)}100%{transform:scale(0)}}
+    @media (prefers-reduced-motion:reduce){.scene *{animation:none!important}.rise{opacity:.4}}
+    /* Motion */
+    .hero{position:relative;overflow:hidden}
+    .hero>.container{position:relative;z-index:1}
+    .fx{position:absolute;inset:0;pointer-events:none;z-index:0}
+    .blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.35;animation:drift 16s ease-in-out infinite alternate}
+    .blob.b1{width:380px;height:380px;background:var(--accent-bright);top:-120px;left:-100px}
+    .blob.b2{width:320px;height:320px;background:#2f7a5b;bottom:-120px;right:8%;animation-delay:-6s;opacity:.22}
+    @keyframes drift{to{transform:translate(70px,50px) scale(1.15)}}
+    .sym{position:absolute;font:600 clamp(18px,2.4vw,30px) var(--font-mono);color:var(--accent);opacity:.18;animation:floaty 9s ease-in-out infinite}
+    @keyframes floaty{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-22px) rotate(8deg)}}
+    .hero .eyebrow,.hero h1,.hero .lead,.hero-actions,.hero-stats,.demo-card{opacity:0;transform:translateY(24px);animation:rise .8s cubic-bezier(.2,.7,.2,1) forwards}
+    .hero .eyebrow{animation-delay:.05s}.hero h1{animation-delay:.15s}.hero .lead{animation-delay:.3s}
+    .hero-actions{animation-delay:.42s}.hero-stats{animation-delay:.54s}.demo-card{animation-delay:.35s;transform:translateY(24px) scale(.97)}
+    @keyframes rise{to{opacity:1;transform:none}}
+    .hero h1 em{display:inline-block;transition:opacity .35s,transform .35s;background:linear-gradient(90deg,var(--accent),var(--accent-bright),var(--accent));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 5s linear infinite}
+    .hero h1 em.swap{opacity:0;transform:translateY(12px)}
+    @keyframes shine{to{background-position:-200% 0}}
+    .btn-primary{position:relative;overflow:hidden}
+    .btn-primary::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:sweep 4.5s ease-in-out infinite}
+    @keyframes sweep{0%,60%{left:-60%}100%{left:140%}}
+    .btn,.card-cta{will-change:transform}
+    .ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,.5);transform:scale(0);animation:rip .6s ease-out forwards;pointer-events:none}
+    @keyframes rip{to{transform:scale(4);opacity:0}}
+    .demo-table tbody tr{opacity:0;transform:translateX(-12px)}
+    .demo-card.play .demo-table tbody tr{animation:rowin .5s ease forwards;animation-delay:calc(var(--i)*.28s + .9s)}
+    @keyframes rowin{to{opacity:1;transform:none}}
+    .digits-chart .bar{transform-origin:bottom;transform:scaleY(0)}
+    .demo-card.play .digits-chart .bar{animation:grow .8s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*.22s + 1.2s)}
+    @keyframes grow{to{transform:scaleY(1)}}
+    .chip-ok i{animation:pulse 1.8s ease-in-out infinite}
+    @keyframes pulse{50%{transform:scale(1.4)}}
+    .chapter-card,.app,.member,.step,.info{transition:transform .25s,box-shadow .25s,border-color .25s}
+    .chapter-card.live::before{content:"";position:absolute;inset:-2px;border-radius:calc(var(--radius) + 2px);border:2px solid var(--accent);opacity:.0;animation:ring 2.4s ease-out infinite;pointer-events:none}
+    @keyframes ring{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.06)}}
+    .chapter-card .ico,.feat .ico,.step .ico,.app .ico{transition:transform .3s}
+    .chapter-card:hover .ico,.feat:hover .ico,.step:hover .ico,.app:hover .ico{transform:rotate(-8deg) scale(1.12)}
+    .step:hover,.app:hover,.member:hover,.info:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+    .reveal.in.d1{transition-delay:.08s}.reveal.in.d2{transition-delay:.16s}.reveal.in.d3{transition-delay:.24s}
+    .section-head .eyebrow i{animation:floaty 5s ease-in-out infinite}
+    .ring{transition:background .1s}
+    .pp-dots span{transition:transform .25s,background .3s}
+    .pp-dots span.ok{animation:pop .5s cubic-bezier(.3,1.6,.5,1) backwards;animation-delay:calc(var(--i)*.08s + .3s)}
+    @keyframes pop{from{transform:scale(0)}}
+    .m1-feats div{transition:transform .25s,background .25s}
+    .m1-feats div:hover{transform:translateX(4px);background:rgba(255,255,255,.14)}
+    .tip-toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,40px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;box-shadow:var(--shadow);opacity:0;transition:.4s;z-index:150;max-width:92vw}
+    .tip-toast.show{opacity:1;transform:translate(-50%,0)}
+    @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.hero .eyebrow,.hero h1,.hero .lead,.hero-actions,.hero-stats,.demo-card,.demo-table tbody tr{opacity:1;transform:none}.digits-chart .bar{transform:none}.blob,.sym,.btn-primary::after{animation:none}}
+
+    @media (prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,*::before,*::after{transition:none !important;animation:none !important}
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-bar" id="scroll-bar"></div>
+  <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#inicio" aria-label="ITERA, ir al inicio">
+        <span class="brand-mark" aria-hidden="true"><i class="fa-solid fa-wave-square"></i></span>
+        <span class="brand-text"><strong>ITERA</strong><small>Laboratorio de Métodos Numéricos</small></span>
+      </a>
+
+      <nav class="site-nav" id="site-nav" aria-label="Principal">
+        <div class="nav-head">
+          <strong>ITERA</strong>
+          <button class="nav-close" type="button" aria-label="Cerrar menú"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+        </div>
+        <ul>
+          <li><a href="#inicio"><i class="fa-solid fa-house" aria-hidden="true"></i>Inicio</a></li>
+          <li><a href="#laboratorio"><i class="fa-solid fa-flask" aria-hidden="true"></i>Laboratorio</a></li>
+          <li><a href="#modulo-1"><i class="fa-solid fa-play" aria-hidden="true"></i>Módulo 1</a></li>
+          <li><a href="#ruta"><i class="fa-solid fa-route" aria-hidden="true"></i>Ruta</a></li>
+          <li><a href="#temario"><i class="fa-solid fa-list-ol" aria-hidden="true"></i>Temario</a></li>
+          <li><a href="#incluye"><i class="fa-solid fa-layer-group" aria-hidden="true"></i>Qué incluye</a></li>
+          <li><a href="#aplicaciones"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i>Aplicaciones</a></li>
+          <li><a href="#publico"><i class="fa-solid fa-user-graduate" aria-hidden="true"></i>Para quién</a></li>
+          <li><a href="#equipo"><i class="fa-solid fa-users" aria-hidden="true"></i>Equipo</a></li>
+        </ul>
+        <div class="nav-foot">
+          <a class="btn btn-primary" href="modulo-1/index.html">Ir al Módulo 1 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </nav>
+      <div class="nav-backdrop" aria-hidden="true"></div>
+
+      <a class="btn btn-primary btn-sm header-cta" href="modulo-1/index.html" id="header-cta">Estudiar Módulo 1</a>
+      <button class="theme-btn" id="theme-btn" type="button" aria-label="Cambiar tema"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+      <button class="menu-toggle" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="site-nav"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+    </div>
+  </header>
+
+  <main id="contenido">
+    <!-- Inicio -->
+    <section class="hero" id="inicio">
+      <div class="fx" aria-hidden="true">
+        <span class="blob b1"></span><span class="blob b2"></span>
+        <span class="sym" style="left:6%;top:18%">∑</span>
+        <span class="sym" style="left:46%;top:8%;animation-delay:-2s">π</span>
+        <span class="sym" style="left:90%;top:20%;animation-delay:-4s">∫</span>
+        <span class="sym" style="left:38%;top:86%;animation-delay:-1s">√2</span>
+        <span class="sym" style="left:80%;top:80%;animation-delay:-5s">f′(x)</span>
+        <span class="sym" style="left:3%;top:72%;animation-delay:-3s">ε</span>
+      </div>
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow"><i class="fa-solid fa-graduation-cap" aria-hidden="true"></i> UNSA · Ingeniería de Sistemas</p>
+          <h1>Aprende métodos numéricos con una ruta <em>clara y aplicada</em></h1>
+          <p class="lead">Teoría breve, calculadoras interactivas, evaluaciones con retroalimentación y un examen final por módulo. El Módulo 1 (Errores) ya está disponible; los demás se publican en orden.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" id="hero-cta" href="modulo-1/index.html"><span>Empezar el Módulo 1</span> <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            <a class="btn btn-secondary" href="#ruta"><i class="fa-solid fa-route" aria-hidden="true"></i> Ver la ruta completa</a>
+          </div>
+          <div class="hero-stats">
+            <div><b>8</b><span>módulos</span></div>
+            <div><b data-count="sections">67</b><span>secciones</span></div>
+            <div><b data-count="topics">125</b><span>temas en total</span></div>
+          </div>
+        </div>
+
+        <aside class="demo-card" aria-labelledby="demo-title">
+          <div class="demo-top">
+            <h2 id="demo-title"><i class="fa-solid fa-square-root-variable" aria-hidden="true"></i> Calcular √2 con Newton-Raphson</h2>
+            <span class="chip chip-ok"><i class="fa-solid fa-check" aria-hidden="true"></i> 4 iteraciones</span>
+          </div>
+          <p class="formula"><span>f(x) = x² − 2</span><span>xₙ₊₁ = xₙ − f(xₙ) / f′(xₙ)</span></p>
+          <div class="table-scroll">
+            <table class="demo-table">
+              <thead><tr><th scope="col">n</th><th scope="col">xₙ</th><th scope="col">|xₙ − √2|</th></tr></thead>
+              <tbody>
+                <tr><td>0</td><td>1.0000000</td><td>4.1 × 10⁻¹</td></tr>
+                <tr><td>1</td><td>1.5000000</td><td>8.6 × 10⁻²</td></tr>
+                <tr><td>2</td><td>1.4166667</td><td>2.5 × 10⁻³</td></tr>
+                <tr><td>3</td><td>1.4142157</td><td>2.1 × 10⁻⁶</td></tr>
+                <tr><td>4</td><td class="ok">1.4142136</td><td class="ok">1.6 × 10⁻¹²</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="digits" role="img" aria-label="Dígitos correctos por iteración: 0.4, 1.1, 2.6, 5.7 y 11.8">
+            <p class="digits-label">Dígitos correctos en cada iteración</p>
+            <div class="digits-chart" aria-hidden="true">
+              <div class="bar" style="height:3%"><span>0.4</span></div>
+              <div class="bar" style="height:9%"><span>1.1</span></div>
+              <div class="bar" style="height:22%"><span>2.6</span></div>
+              <div class="bar" style="height:48%"><span>5.7</span></div>
+              <div class="bar" style="height:100%"><span>11.8</span></div>
+            </div>
+            <div class="digits-axis" aria-hidden="true"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span></div>
+          </div>
+          <p class="demo-note">Convergencia cuadrática: en cada iteración los dígitos correctos casi se duplican. Lo verás en el capítulo 2.</p>
+        </aside>
+      </div>
+    </section>
+
+
+    <!-- Progreso -->
+    <div class="container reveal" id="progreso">
+      <div class="progress-panel">
+        <div class="ring" id="pp-ring"><b id="pp-pct">0%</b></div>
+        <div class="pp-text">
+          <h3>Tu progreso en el Módulo 1</h3>
+          <p id="pp-sub">Aún no empiezas. Aprueba la evaluación de cada sección para marcarla en verde.</p>
+          <div class="pp-dots" id="pp-dots" aria-label="Secciones completadas"></div>
+        </div>
+        <a class="btn btn-primary" id="pp-btn" href="modulo-1/index.html"><span>Empezar</span> <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </div>
+
+    <!-- Laboratorio (escena animada) -->
+    <section class="scene-sec" id="laboratorio">
+      <div class="container">
+        <div class="section-head reveal">
+          <p class="eyebrow"><i class="fa-solid fa-flask" aria-hidden="true"></i> En el laboratorio</p>
+          <h2>Así se trabaja un método numérico</h2>
+          <p>Se plantea en la pizarra, se programa y se grafica el error, y se comprueba que converge. Ese es el recorrido de cada módulo.</p>
+        </div>
+        <div class="scene-wrap reveal">
+          <svg class="scene" viewBox="0 0 960 380" role="img" aria-label="Tres personas trabajando: una escribe el método de Newton en una pizarra, otra programa y grafica el error en un monitor, y otra revisa resultados en una tableta.">
+            <defs>
+              <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.3" fill="var(--line)"/></pattern>
+              <clipPath id="fclip"><rect x="64" y="62" width="0" height="30"><animate attributeName="width" values="0;0;290;290;0" keyTimes="0;.02;.3;.95;1" dur="9s" repeatCount="indefinite"/></rect></clipPath>
+            </defs>
+            <rect width="960" height="380" rx="24" fill="var(--surface)" stroke="var(--line)"/>
+            <rect width="960" height="380" rx="24" fill="url(#dots)"/>
+            <rect x="1" y="330" width="958" height="49" rx="0" fill="var(--surface-2)"/>
+            <line x1="1" y1="330" x2="959" y2="330" stroke="var(--line)" stroke-width="2"/>
+
+            <!-- pizarra -->
+            <g>
+              <line x1="150" y1="262" x2="128" y2="330" stroke="#8a6a4f" stroke-width="6" stroke-linecap="round"/>
+              <line x1="280" y1="262" x2="302" y2="330" stroke="#8a6a4f" stroke-width="6" stroke-linecap="round"/>
+              <rect x="50" y="48" width="330" height="214" rx="12" fill="#fbfaf7" stroke="#c9d3dc" stroke-width="3"/>
+              <text x="64" y="84" font-family="JetBrains Mono, monospace" font-size="17" font-weight="600" fill="#14212e" clip-path="url(#fclip)">xₙ₊₁ = xₙ − f(xₙ)/f′(xₙ)</text>
+              <line x1="70" y1="200" x2="362" y2="200" stroke="#9aa7b3" stroke-width="2"/>
+              <line x1="90" y1="105" x2="90" y2="236" stroke="#9aa7b3" stroke-width="2"/>
+              <path d="M96 248 C 150 240, 190 216, 215 200 C 250 178, 300 140, 358 112" fill="none" stroke="#c2410c" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="420">
+                <animate attributeName="stroke-dashoffset" values="420;420;0;0;420" keyTimes="0;.12;.4;.95;1" dur="9s" repeatCount="indefinite"/>
+              </path>
+              <g font-family="JetBrains Mono, monospace" font-size="12" fill="#14212e">
+                <g><circle cx="332" cy="200" r="5.5" fill="#c2410c"/><text x="325" y="222">x₀</text><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.36;.4;.95;1" dur="9s" repeatCount="indefinite"/></g>
+                <g><circle cx="262" cy="200" r="5.5" fill="#c2410c"/><text x="255" y="222">x₁</text><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.48;.52;.95;1" dur="9s" repeatCount="indefinite"/></g>
+                <g><circle cx="228" cy="200" r="5.5" fill="#c2410c"/><text x="221" y="222">x₂</text><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.6;.64;.95;1" dur="9s" repeatCount="indefinite"/></g>
+                <g><circle cx="216" cy="200" r="6" fill="#2f7a5b"><animate attributeName="r" values="6;10;6" dur="1.2s" repeatCount="indefinite"/></circle><animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.72;.76;.95;1" dur="9s" repeatCount="indefinite"/></g>
+              </g>
+            </g>
+
+            <!-- profesora -->
+            <g class="p1">
+              <rect x="416" y="282" width="12" height="48" rx="5" fill="#2b3a4a"/>
+              <rect x="433" y="282" width="12" height="48" rx="5" fill="#2b3a4a"/>
+              <rect x="411" y="324" width="21" height="8" rx="4" fill="#14212e"/><rect x="431" y="324" width="21" height="8" rx="4" fill="#14212e"/>
+              <rect x="406" y="184" width="48" height="104" rx="20" fill="#c2410c"/>
+              <rect x="424" y="176" width="12" height="18" rx="5" fill="#e0b48f"/>
+              <path d="M422 186 l8 10 l8 -10z" fill="#9a3412"/>
+              <line x1="448" y1="206" x2="462" y2="256" stroke="#c2410c" stroke-width="13" stroke-linecap="round"/>
+              <circle cx="463" cy="260" r="7" fill="#f2c9a5"/>
+              <g class="head-bob">
+                <circle cx="430" cy="166" r="22" fill="#f2c9a5"/>
+                <path d="M407 164 a23 23 0 0 1 46 0 q-9 -11 -23 -9 q-14 -2 -23 9z" fill="#2b2118"/>
+                <circle cx="416" cy="176" r="4" fill="#f29b8b" opacity=".4"/><circle cx="444" cy="176" r="4" fill="#f29b8b" opacity=".4"/><circle cx="420" cy="170" r="2.3" fill="#14212e" class="blink"/><circle cx="437" cy="170" r="2.3" fill="#14212e" class="blink"/>
+                <path d="M422 178 q8 6 16 0" stroke="#14212e" stroke-width="2" fill="none" stroke-linecap="round"/>
+              </g>
+              <g class="arm-write">
+                <line x1="412" y1="206" x2="388" y2="150" stroke="#c2410c" stroke-width="13" stroke-linecap="round"/>
+                <circle cx="387" cy="146" r="7" fill="#f2c9a5"/>
+                <line x1="384" y1="140" x2="378" y2="128" stroke="#14212e" stroke-width="4" stroke-linecap="round"/>
+              </g>
+            </g>
+            <g>
+              <rect x="468" y="96" width="112" height="34" rx="17" fill="#fff" stroke="#2f7a5b" stroke-width="2"/>
+              <path d="M488 129 l-8 14 l20 -14z" fill="#fff" stroke="#2f7a5b" stroke-width="2"/>
+              <rect x="486" y="128" width="16" height="3" fill="#fff"/>
+              <text x="524" y="118" text-anchor="middle" font-family="Sora, sans-serif" font-weight="700" font-size="14" fill="#2f7a5b">¡Converge!</text>
+              <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;.74;.78;.95;1" dur="9s" repeatCount="indefinite"/>
+            </g>
+
+            <!-- escritorio y programadora -->
+            <g>
+              <rect x="500" y="262" width="62" height="10" rx="4" fill="#5f6c78"/>
+              <rect x="494" y="196" width="8" height="74" rx="4" fill="#5f6c78"/>
+              <line x1="531" y1="272" x2="531" y2="330" stroke="#5f6c78" stroke-width="5"/>
+              <line x1="508" y1="330" x2="556" y2="330" stroke="#5f6c78" stroke-width="6" stroke-linecap="round"/>
+              <rect x="526" y="254" width="74" height="15" rx="7" fill="#2b3a4a"/>
+              <rect x="592" y="262" width="13" height="68" rx="5" fill="#2b3a4a"/>
+              <rect x="590" y="324" width="24" height="8" rx="4" fill="#14212e"/>
+              <rect x="514" y="182" width="40" height="86" rx="19" fill="#2f7a5b"/>
+              <rect x="531" y="176" width="12" height="18" rx="5" fill="#b57d55"/>
+              <path d="M529 184 l8 10 l8 -10z" fill="#1f5a42"/>
+              <g class="head-bob2">
+                <circle cx="537" cy="168" r="21" fill="#c98e66"/>
+                <path d="M515 166 a22 22 0 0 1 43 -4 q-6 -4 -12 -2 q-14 -6 -31 6z" fill="#14212e"/>
+                <circle cx="549" cy="178" r="3.5" fill="#e07a6a" opacity=".35"/><circle cx="547" cy="171" r="2.3" fill="#14212e" class="blink"/>
+                <path d="M542 179 q6 4 12 -1" stroke="#14212e" stroke-width="2" fill="none" stroke-linecap="round"/>
+              </g>
+              <g class="typing t1"><line x1="540" y1="208" x2="612" y2="252" stroke="#2f7a5b" stroke-width="11" stroke-linecap="round"/><circle cx="617" cy="255" r="6.5" fill="#c98e66"/></g>
+              <g class="typing t2"><line x1="546" y1="214" x2="626" y2="254" stroke="#25654a" stroke-width="11" stroke-linecap="round"/><circle cx="631" cy="256" r="6.5" fill="#c98e66"/></g>
+
+              <rect x="574" y="268" width="236" height="10" rx="4" fill="#8a6a4f"/>
+              <rect x="584" y="278" width="8" height="52" fill="#8a6a4f"/>
+              <rect x="792" y="278" width="8" height="52" fill="#8a6a4f"/>
+              <rect x="612" y="262" width="62" height="6" rx="3" fill="#c9d3dc"/>
+              <rect x="718" y="250" width="12" height="18" fill="#5f6c78"/>
+              <rect x="700" y="262" width="48" height="6" rx="3" fill="#5f6c78"/>
+              <rect x="650" y="146" width="150" height="106" rx="9" fill="#0f1720" stroke="#2b3a4a" stroke-width="4"/>
+              <circle cx="664" cy="158" r="3" fill="#f87171"/><circle cx="675" cy="158" r="3" fill="#fbbf24"/><circle cx="686" cy="158" r="3" fill="#5cc29a"/>
+              <text x="700" y="162" font-family="JetBrains Mono, monospace" font-size="9" fill="#97a6b4">error.py</text>
+              <line x1="664" y1="172" x2="788" y2="172" stroke="#24384a"/>
+              <line x1="670" y1="232" x2="788" y2="232" stroke="#5cc29a" stroke-width="1.5" stroke-dasharray="4 4"/>
+              <path d="M672 182 C 692 184, 700 214, 716 224 S 748 232, 784 236" fill="none" stroke="#fb8a5a" stroke-width="3" stroke-linecap="round" stroke-dasharray="190">
+                <animate attributeName="stroke-dashoffset" values="190;190;0;0;190" keyTimes="0;.08;.5;.95;1" dur="9s" repeatCount="indefinite"/>
+              </path>
+              <circle r="4.5" fill="#fff"><animateMotion dur="9s" repeatCount="indefinite" keyPoints="0;0;1;1;0" keyTimes="0;.08;.5;.95;1" calcMode="linear" path="M672 182 C 692 184, 700 214, 716 224 S 748 232, 784 236"/></circle>
+              <text x="668" y="244" font-family="JetBrains Mono, monospace" font-size="8" fill="#5cc29a">ε &lt; 10⁻⁶</text>
+              <g class="pop-ok"><circle cx="782" cy="158" r="8" fill="#2f7a5b"/><path d="M778 158 l3 3 l5 -6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+            </g>
+
+            <!-- analista con tableta -->
+            <g>
+              <rect x="868" y="282" width="12" height="48" rx="5" fill="#2b3a4a"/>
+              <rect x="885" y="282" width="12" height="48" rx="5" fill="#2b3a4a"/>
+              <rect x="863" y="324" width="21" height="8" rx="4" fill="#14212e"/><rect x="883" y="324" width="21" height="8" rx="4" fill="#14212e"/>
+              <rect x="858" y="184" width="48" height="104" rx="20" fill="#d97706"/>
+              <rect x="876" y="176" width="12" height="18" rx="5" fill="#74472c"/>
+              <path d="M874 186 l8 10 l8 -10z" fill="#a85d04"/>
+              <g class="head-bob">
+                <circle cx="882" cy="166" r="22" fill="#8d5a3b"/>
+                <path d="M859 163 a24 24 0 0 1 46 1 q-8 -13 -23 -11 q-14 -2 -23 10z" fill="#14212e"/>
+                <circle cx="873" cy="170" r="5.5" fill="none" stroke="#14212e" stroke-width="1.8"/><circle cx="890" cy="170" r="5.5" fill="none" stroke="#14212e" stroke-width="1.8"/><line x1="878.5" y1="170" x2="884.5" y2="170" stroke="#14212e" stroke-width="1.8"/>
+                <path d="M874 179 q8 6 16 0" stroke="#14212e" stroke-width="2" fill="none" stroke-linecap="round"/>
+              </g>
+              <line x1="862" y1="208" x2="842" y2="244" stroke="#d97706" stroke-width="12" stroke-linecap="round"/>
+              <g class="tablet">
+                <rect x="820" y="206" width="52" height="66" rx="7" fill="#0f1720" stroke="#c9d3dc" stroke-width="3"/>
+                <rect class="tb b1" x="830" y="236" width="8" height="26" rx="2" fill="#fb8a5a"/>
+                <rect class="tb b2" x="842" y="236" width="8" height="26" rx="2" fill="#5cc29a"/>
+                <rect class="tb b3" x="854" y="236" width="8" height="26" rx="2" fill="#fbbf24"/>
+                <text x="846" y="226" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#97a6b4">p ≈ 2.0</text>
+              </g>
+              <line x1="900" y1="208" x2="868" y2="250" stroke="#d97706" stroke-width="12" stroke-linecap="round"/>
+              <circle cx="866" cy="252" r="6.5" fill="#8d5a3b"/>
+            </g>
+
+            <!-- símbolos que suben -->
+            <g font-family="JetBrains Mono, monospace" font-weight="600" fill="var(--accent)">
+              <text class="rise" x="610" y="130" font-size="20" style="animation-delay:0s">3.1416</text>
+              <text class="rise" x="780" y="120" font-size="22" style="animation-delay:-2s">Σ</text>
+              <text class="rise" x="320" y="40" font-size="18" style="animation-delay:-4s">10⁻⁶</text>
+              <text class="rise" x="915" y="150" font-size="20" style="animation-delay:-1s">√2</text>
+              <text class="rise" x="40" y="40" font-size="20" style="animation-delay:-3s">∫</text>
+              <text class="rise" x="700" y="90" font-size="18" style="animation-delay:-5s">e</text>
+            </g>
+          </svg>
+        </div>
+        <ul class="scene-steps">
+          <li><span>1</span><div><b>Plantear</b><p>La fórmula y su interpretación gráfica.</p></div></li>
+          <li><span>2</span><div><b>Programar</b><p>El algoritmo en Python y la gráfica del error.</p></div></li>
+          <li><span>3</span><div><b>Verificar</b><p>El orden de convergencia y la precisión obtenida.</p></div></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Ruta -->
+    <section class="section-alt" id="ruta">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><i class="fa-solid fa-route" aria-hidden="true"></i> Ruta de aprendizaje</p>
+          <h2>Ocho módulos, en el orden en que se construyen</h2>
+          <p>Cada capítulo usa lo aprendido en el anterior: primero entiendes el error, luego lo controlas al buscar raíces, resolver sistemas, aproximar funciones, integrar, simular y optimizar.</p>
+        </div>
+
+
+        <div class="m1-banner reveal" id="modulo-1">
+          <div>
+            <span class="chip"><i class="fa-solid fa-circle" aria-hidden="true"></i> Disponible ahora</span>
+            <h3>Módulo 1 · Errores</h3>
+            <p>Redondeo, cifras significativas, error absoluto y relativo, propagación, condicionamiento y convergencia. Cada sección termina con una evaluación y el módulo con un examen final de 15 preguntas.</p>
+            <a class="btn btn-primary" href="modulo-1/index.html">Entrar al módulo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </div>
+          <div class="m1-feats">
+            <div><i class="fa-solid fa-square-root-variable"></i> Fórmulas con KaTeX</div>
+            <div><i class="fa-solid fa-calculator"></i> Calculadoras</div>
+            <div><i class="fa-solid fa-circle-question"></i> Quiz por sección</div>
+            <div><i class="fa-solid fa-scroll"></i> Examen final</div>
+            <div><i class="fa-solid fa-chart-line"></i> Gráficas de error</div>
+            <div><i class="fa-brands fa-python"></i> Código en Python</div>
+          </div>
+        </div>
+
+        <div class="path-group">
+          <div class="path-group-head">
+            <h3>Fundamentos del curso</h3>
+            <p>Capítulos 1 a 6</p>
+          </div>
+          <div class="chapter-grid">
+            <article class="chapter-card live">
+              <div class="top"><span class="num">01</span><span class="ico" aria-hidden="true"><i class="fa-solid fa-crosshairs"></i></span></div>
+              <h4>Errores</h4>
+              <p>Números aproximados, redondeo, cifras significativas, propagación del error, condicionamiento y convergencia.</p>
+              <div><div class="card-bar"><i id="card-bar-fill"></i></div><div class="card-bar-label"><span id="card-bar-text">Sin empezar</span><span class="chip chip-new">Disponible</span></div></div>
+              <a class="card-cta" href="modulo-1/index.html">Estudiar módulo <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            </article>
+            <article class="chapter-card soon">
+              <div class="top"><span class="num">02</span><span class="ico" aria-hidden="true"><i class="fa-solid fa-wave-square"></i></span></div>
+              <h4>Solución de ecuaciones no lineales</h4>
+              <p>Separación de raíces, bisección, regla falsa, Newton-Raphson, secante, Müller, Bairstow y sistemas no lineales.</p>
+              <div class="foot"><span>12 secciones</span><span class="chip chip-soon"><i class="fa-regular fa-clock" aria-hidden="true"></i> Próximamente</span></div>
+            </article>
+            <article class="chapter-card soon">
+              <div class="top"><span class="num">03</span><span class="ico" aria-hidden="true"><i class="fa-solid fa-table-cells"></i></span></div>
+              <h4>Solución de sistemas de ecuaciones lineales</h4>
+              <p>Eliminación con pivoteo, Gauss-Seidel y Jacobi, factorizaciones LU y Cholesky, y valores propios.</p>
+              <div class="foot"><span>8 secciones</span><span class="chip chip-soon"><i class="fa-regular fa-clock" aria-hidden="true"></i> Próximamente</span></div>
+            </article>
+            <article class="chapter-card soon">
+              <div class="top"><span class="num">04</span><span class="ico" aria-hidden="true"><i class="fa-solid fa-chart-line"></i></span></div>
+              <h4>Ajuste de curvas e interpolación</h4>
+              <p>Regresión por mínimos cuadrados, interpolación de Newton y Lagrange, y splines.</p>
+              <div class="foot"><span>8 secciones</span><span class="chip chip-soon"><i class="fa-regular fa-clock" aria-hidden="true"></i> Próximamente</span></div>
+            </article>
+            <article class="chapter-card soon">
+              <div class="top"><span class="num">05</span><span class="ico" aria-hidden="true"><i class="fa-solid fa-chart-area"></i></span></div>
+              <h4>Integración y diferenciación numérica</h4>
+              <p>Newton-Cotes, Romberg, cuadratura gaussiana, integrales múltiples y derivación numérica.</p>
+              <div class="foot"><span>7 secciones</span><span class="chip chip-soon"><i class="fa-regular fa-clock" aria-hidden="true"></i> Próximamente</span></div>
+            </article>
+            <article class="chapter-card soon">
+              <div class="top"><span class="num">06</span><span class="ico" aria-hidden="true"><i class="fa-solid fa-arrow-trend-up"></i></span></div>
+              <h4>Ecuaciones diferenciales ordinarias</h4>
+              <p>Euler, Runge-Kutta, pasos múltiples, problemas rígidos, valores en la frontera y ecuaciones en derivadas parciales.</p>
+              <div class="foot"><span>7 secciones</span><span class="chip chip-soon"><i class="fa-regular fa-clock" aria-hidden="true"></i> Próximamente</span></div>
+            </article>
+          </div>
+        </div>
+
+        <div class="path-group">
+          <div class="path-group-head">
+            <h3>Enfoque Ingeniería de Sistemas</h3>
+            <p>Capítulos 7 y 8</p>
+          </div>
+          <div class="chapter-grid">
+            <article class="chapter-card systems soon">
+              <div class="top"><span class="num">07</span><span class="ico" aria-hidden="true"><i class="fa-solid fa-sliders"></i></span></div>
+              <h4>Optimización numérica</h4>
+              <p>Sección dorada, gradiente descendente, Newton, mínimos cuadrados no lineales y programación lineal.</p>
+              <div class="foot"><span>6 secciones</span><span class="chip chip-soon"><i class="fa-regular fa-clock" aria-hidden="true"></i> Próximamente</span></div>
+            </article>
+            <article class="chapter-card systems soon">
+              <div class="top"><span class="num">08</span><span class="ico" aria-hidden="true"><i class="fa-solid fa-code"></i></span></div>
+              <h4>Implementación y validación de métodos numéricos</h4>
+              <p>Punto flotante, implementación de algoritmos, pruebas y validación frente a una referencia.</p>
+              <div class="foot"><span>4 secciones</span><span class="chip chip-soon"><i class="fa-regular fa-clock" aria-hidden="true"></i> Próximamente</span></div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Temario -->
+    <section id="temario">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><i class="fa-solid fa-list-ol" aria-hidden="true"></i> Temario</p>
+          <h2>Todos los temas del curso</h2>
+          <p>Busca un método o despliega un capítulo para ver sus secciones y subsecciones.</p>
+        </div>
+
+        <div class="toolbar">
+          <label class="search">
+            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+            <span class="is-hidden">Buscar un tema</span>
+            <input type="search" id="topic-search" placeholder="Buscar un tema, por ejemplo: Newton, splines, LU…" autocomplete="off">
+          </label>
+          <button class="btn btn-secondary" type="button" id="toggle-all" aria-pressed="false"><i class="fa-solid fa-up-right-and-down-left-from-center" aria-hidden="true"></i> <span>Expandir todo</span></button>
+        </div>
+        <p class="results" id="search-results" aria-live="polite"></p>
+
+        <div id="syllabus">
+          <details class="chapter" id="cap-1">
+            <summary><span class="ch-num">01</span><span class="ch-title">Errores</span><span class="ch-meta">15 secciones · disponible</span><i class="fa-solid fa-chevron-down ch-chev" aria-hidden="true"></i></summary>
+            <ol class="sections">
+              <li><div class="row"><a class="t" style="color:var(--accent);font-weight:600" href="modulo-1/index.html" data-keep>Abrir el módulo interactivo →</a></div></li>
+              <li><div class="row"><span class="n">1.1</span><span class="t">Métodos numéricos: conceptos</span></div></li>
+              <li><div class="row"><span class="n">1.2</span><span class="t">Consideraciones generales sobre los métodos numéricos</span></div></li>
+              <li><div class="row"><span class="n">1.3</span><span class="t">Aplicación de la computadora a los métodos numéricos</span></div></li>
+              <li><div class="row"><span class="n">1.4</span><span class="t">Números exactos y aproximados</span></div></li>
+              <li><div class="row"><span class="n">1.5</span><span class="t">Redondeo de los números</span></div></li>
+              <li><div class="row"><span class="n">1.6</span><span class="t">Error absoluto y relativo</span></div></li>
+              <li><div class="row"><span class="n">1.7</span><span class="t">Clasificación de los errores</span></div></li>
+              <li><div class="row"><span class="n">1.8</span><span class="t">Cifras significativas</span></div></li>
+              <li><div class="row"><span class="n">1.9</span><span class="t">Errores de la suma y de la diferencia</span></div></li>
+              <li><div class="row"><span class="n">1.10</span><span class="t">Errores del producto</span></div></li>
+              <li><div class="row"><span class="n">1.11</span><span class="t">Errores del cociente</span></div></li>
+              <li><div class="row"><span class="n">1.12</span><span class="t">Errores de la potencia y de la raíz</span></div></li>
+              <li><div class="row"><span class="n">1.13</span><span class="t">Ejemplos varios sobre el cálculo de errores</span></div></li>
+              <li><div class="row"><span class="n">1.14</span><span class="t">Condicionamiento de un problema y estabilidad de un algoritmo</span></div></li>
+              <li><div class="row"><span class="n">1.15</span><span class="t">Orden y convergencia de un método iterativo</span></div></li>
+            </ol>
+          </details>
+
+          <details class="chapter" id="cap-2">
+            <summary><span class="ch-num">02</span><span class="ch-title">Solución de ecuaciones no lineales</span><span class="ch-meta">12 secciones</span><i class="fa-solid fa-chevron-down ch-chev" aria-hidden="true"></i></summary>
+            <ol class="sections">
+              <li><div class="row"><span class="n">2.1</span><span class="t">Introducción</span></div></li>
+              <li><div class="row"><span class="n">2.2</span><span class="t">Separación de raíces</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">2.2.1</span><span class="t">Método gráfico</span></div></li>
+                  <li><div class="row"><span class="n">2.2.2</span><span class="t">Método analítico</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">2.3</span><span class="t">Método de la bisección</span></div></li>
+              <li><div class="row"><span class="n">2.4</span><span class="t">Método de la regla falsa (o de las cuerdas)</span></div></li>
+              <li><div class="row"><span class="n">2.5</span><span class="t">Método de Newton-Raphson (o de las tangentes)</span></div></li>
+              <li><div class="row"><span class="n">2.6</span><span class="t">Método de la secante</span></div></li>
+              <li><div class="row"><span class="n">2.7</span><span class="t">Método de las aproximaciones sucesivas (método de las iteraciones)</span></div></li>
+              <li><div class="row"><span class="n">2.8</span><span class="t">Método de Bairstow</span></div></li>
+              <li><div class="row"><span class="n">2.9</span><span class="t">Método de Müller</span></div></li>
+              <li><div class="row"><span class="n">2.10</span><span class="t">Raíces múltiples</span></div></li>
+              <li><div class="row"><span class="n">2.11</span><span class="t">Sistemas de ecuaciones no lineales</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">2.11.1</span><span class="t">Método de Newton para sistemas no lineales</span></div></li>
+                  <li><div class="row"><span class="n">2.11.2</span><span class="t">Método de la iteración de punto fijo</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">2.12</span><span class="t">Problemas de aplicación a la ingeniería</span></div></li>
+            </ol>
+          </details>
+
+          <details class="chapter" id="cap-3">
+            <summary><span class="ch-num">03</span><span class="ch-title">Solución de sistemas de ecuaciones lineales</span><span class="ch-meta">8 secciones</span><i class="fa-solid fa-chevron-down ch-chev" aria-hidden="true"></i></summary>
+            <ol class="sections">
+              <li><div class="row"><span class="n">3.1</span><span class="t">Notación matricial</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">3.1.1</span><span class="t">Tipos de matrices cuadradas</span></div></li>
+                  <li><div class="row"><span class="n">3.1.2</span><span class="t">Operaciones con matrices</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">3.2</span><span class="t">Generalidades sobre los sistemas lineales y los métodos de solución</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">3.2.1</span><span class="t">Normas vectoriales y matriciales</span></div></li>
+                  <li><div class="row"><span class="n">3.2.2</span><span class="t">Número de condición de una matriz</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">3.3</span><span class="t">Métodos de eliminación</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">3.3.1</span><span class="t">Método de eliminación simple de Gauss</span></div></li>
+                  <li><div class="row"><span class="n">3.3.2</span><span class="t">Método de Gauss-Jordan</span></div></li>
+                  <li><div class="row"><span class="n">3.3.3</span><span class="t">Pivoteo parcial y pivoteo total</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">3.4</span><span class="t">Métodos iterativos</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">3.4.1</span><span class="t">Método de Gauss-Seidel</span></div></li>
+                  <li><div class="row"><span class="n">3.4.2</span><span class="t">Método de Jacobi</span></div></li>
+                  <li><div class="row"><span class="n">3.4.3</span><span class="t">Criterios de convergencia de los métodos iterativos</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">3.5</span><span class="t">Métodos de factorización de matrices</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">3.5.1</span><span class="t">Método de la raíz cuadrada</span></div></li>
+                  <li><div class="row"><span class="n">3.5.2</span><span class="t">Método de Cholesky</span></div></li>
+                  <li><div class="row"><span class="n">3.5.3</span><span class="t">Factorización LU</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">3.6</span><span class="t">Algoritmo de Thomas</span></div></li>
+              <li><div class="row"><span class="n">3.7</span><span class="t">Valores y vectores propios</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">3.7.1</span><span class="t">Método de la potencia</span></div></li>
+                  <li><div class="row"><span class="n">3.7.2</span><span class="t">Método QR</span></div></li>
+                  <li><div class="row"><span class="n">3.7.3</span><span class="t">Descomposición en valores singulares (SVD)</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">3.8</span><span class="t">Problemas de aplicación a la ingeniería</span></div></li>
+            </ol>
+          </details>
+
+          <details class="chapter" id="cap-4">
+            <summary><span class="ch-num">04</span><span class="ch-title">Ajuste de curvas e interpolación</span><span class="ch-meta">8 secciones</span><i class="fa-solid fa-chevron-down ch-chev" aria-hidden="true"></i></summary>
+            <ol class="sections">
+              <li><div class="row"><span class="n">4.1</span><span class="t">Introducción</span></div></li>
+              <li><div class="row"><span class="n">4.2</span><span class="t">Fundamentos matemáticos</span></div></li>
+              <li><div class="row"><span class="n">4.3</span><span class="t">Regresión lineal</span></div></li>
+              <li><div class="row"><span class="n">4.4</span><span class="t">Regresión polinomial</span></div></li>
+              <li><div class="row"><span class="n">4.5</span><span class="t">Linealización de relaciones no lineales</span></div></li>
+              <li><div class="row"><span class="n">4.6</span><span class="t">Regresión lineal múltiple</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">4.6.1</span><span class="t">Mínimos cuadrados mediante factorización QR y SVD</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">4.7</span><span class="t">Interpolación</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">4.7.1</span><span class="t">Polinomios de interpolación con diferencias divididas de Newton</span></div></li>
+                  <li><div class="row"><span class="n">4.7.2</span><span class="t">Polinomios de interpolación de Lagrange</span></div></li>
+                  <li><div class="row"><span class="n">4.7.3</span><span class="t">Interpolación segmentaria (splines)</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">4.8</span><span class="t">Problemas de aplicación a la ingeniería</span></div></li>
+            </ol>
+          </details>
+
+          <details class="chapter" id="cap-5">
+            <summary><span class="ch-num">05</span><span class="ch-title">Integración y diferenciación numérica</span><span class="ch-meta">7 secciones</span><i class="fa-solid fa-chevron-down ch-chev" aria-hidden="true"></i></summary>
+            <ol class="sections">
+              <li><div class="row"><span class="n">5.1</span><span class="t">Integración mediante las fórmulas de Newton-Cotes</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">5.1.1</span><span class="t">Fórmulas cerradas de Newton-Cotes</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">5.2</span><span class="t">Integración de Romberg</span></div></li>
+              <li><div class="row"><span class="n">5.3</span><span class="t">Integración mediante cuadratura gaussiana</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">5.3.1</span><span class="t">Cuadratura de Gauss-Legendre</span></div></li>
+                  <li><div class="row"><span class="n">5.3.2</span><span class="t">Cuadratura de Gauss-Laguerre</span></div></li>
+                  <li><div class="row"><span class="n">5.3.3</span><span class="t">Cuadratura de Gauss-Hermite</span></div></li>
+                  <li><div class="row"><span class="n">5.3.4</span><span class="t">Cuadratura de Gauss-Chebyshev</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">5.4</span><span class="t">Integrales múltiples</span></div></li>
+              <li><div class="row"><span class="n">5.5</span><span class="t">Diferenciación numérica</span></div></li>
+              <li><div class="row"><span class="n">5.6</span><span class="t">Derivadas de datos desigualmente espaciados</span></div></li>
+              <li><div class="row"><span class="n">5.7</span><span class="t">Problemas de aplicación a la ingeniería</span></div></li>
+            </ol>
+          </details>
+
+          <details class="chapter" id="cap-6">
+            <summary><span class="ch-num">06</span><span class="ch-title">Ecuaciones diferenciales ordinarias</span><span class="ch-meta">7 secciones</span><i class="fa-solid fa-chevron-down ch-chev" aria-hidden="true"></i></summary>
+            <ol class="sections">
+              <li><div class="row"><span class="n">6.1</span><span class="t">Introducción</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">6.1.1</span><span class="t">Orden de una ecuación diferencial</span></div></li>
+                  <li><div class="row"><span class="n">6.1.2</span><span class="t">Grado de una ecuación diferencial</span></div></li>
+                  <li><div class="row"><span class="n">6.1.3</span><span class="t">Solución de una ecuación diferencial</span></div></li>
+                  <li><div class="row"><span class="n">6.1.4</span><span class="t">Solución general</span></div></li>
+                  <li><div class="row"><span class="n">6.1.5</span><span class="t">Solución particular</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">6.2</span><span class="t">Métodos de resolución de las ecuaciones diferenciales ordinarias</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">6.2.1</span><span class="t">Métodos analíticos</span></div></li>
+                  <li><div class="row"><span class="n">6.2.2</span><span class="t">Métodos numéricos</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">6.3</span><span class="t">Métodos de un paso</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">6.3.1</span><span class="t">Método de Euler</span></div></li>
+                  <li><div class="row"><span class="n">6.3.2</span><span class="t">Análisis del error en el método de Euler</span></div></li>
+                  <li><div class="row"><span class="n">6.3.3</span><span class="t">Método de Euler modificado (o método de Heun)</span></div></li>
+                  <li><div class="row"><span class="n">6.3.4</span><span class="t">Métodos con serie de Taylor de orden superior</span></div></li>
+                  <li><div class="row"><span class="n">6.3.5</span><span class="t">Métodos de Runge-Kutta</span></div></li>
+                  <li><div class="row"><span class="n">6.3.6</span><span class="t">Métodos para sistemas de ecuaciones diferenciales ordinarias</span></div></li>
+                  <li><div class="row"><span class="n">6.3.7</span><span class="t">Estabilidad y elección del paso de integración</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">6.4</span><span class="t">Métodos de pasos múltiples</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">6.4.1</span><span class="t">Método de Adams</span></div></li>
+                  <li><div class="row"><span class="n">6.4.2</span><span class="t">Método de Milne</span></div></li>
+                  <li><div class="row"><span class="n">6.4.3</span><span class="t">Métodos implícitos y problemas rígidos (stiff)</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">6.5</span><span class="t">Ecuaciones diferenciales con valor en la frontera</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">6.5.1</span><span class="t">Método del disparo</span></div></li>
+                  <li><div class="row"><span class="n">6.5.2</span><span class="t">Método de diferencias finitas</span></div></li>
+                  <li><div class="row"><span class="n">6.5.3</span><span class="t">Problemas con valores en la frontera no lineales</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">6.6</span><span class="t">Ecuaciones diferenciales parciales</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">6.6.1</span><span class="t">Ecuaciones diferenciales elípticas</span></div></li>
+                  <li><div class="row"><span class="n">6.6.2</span><span class="t">Ecuaciones parabólicas</span></div></li>
+                  <li><div class="row"><span class="n">6.6.3</span><span class="t">Ecuaciones diferenciales hiperbólicas</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">6.7</span><span class="t">Aplicaciones a la ingeniería</span></div></li>
+            </ol>
+          </details>
+
+          <details class="chapter" id="cap-7">
+            <summary><span class="ch-num">07</span><span class="ch-title">Optimización numérica</span><span class="ch-meta">6 secciones</span><i class="fa-solid fa-chevron-down ch-chev" aria-hidden="true"></i></summary>
+            <ol class="sections">
+              <li><div class="row"><span class="n">7.1</span><span class="t">Conceptos: mínimos locales y globales, condiciones de optimalidad</span></div></li>
+              <li><div class="row"><span class="n">7.2</span><span class="t">Optimización de una variable</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">7.2.1</span><span class="t">Búsqueda de la sección dorada</span></div></li>
+                  <li><div class="row"><span class="n">7.2.2</span><span class="t">Método de Newton para optimización</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">7.3</span><span class="t">Optimización multivariable sin restricciones</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">7.3.1</span><span class="t">Método del gradiente descendente</span></div></li>
+                  <li><div class="row"><span class="n">7.3.2</span><span class="t">Método de Newton multivariable</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">7.4</span><span class="t">Mínimos cuadrados no lineales</span></div>
+                <ol class="subs">
+                  <li><div class="row"><span class="n">7.4.1</span><span class="t">Método de Gauss-Newton</span></div></li>
+                  <li><div class="row"><span class="n">7.4.2</span><span class="t">Método de Levenberg-Marquardt</span></div></li>
+                </ol>
+              </li>
+              <li><div class="row"><span class="n">7.5</span><span class="t">Programación lineal: método simplex</span></div></li>
+              <li><div class="row"><span class="n">7.6</span><span class="t">Problemas de aplicación en ingeniería de sistemas</span></div></li>
+            </ol>
+          </details>
+
+          <details class="chapter" id="cap-8">
+            <summary><span class="ch-num">08</span><span class="ch-title">Implementación y validación de métodos numéricos</span><span class="ch-meta">4 secciones</span><i class="fa-solid fa-chevron-down ch-chev" aria-hidden="true"></i></summary>
+            <ol class="sections">
+              <li><div class="row"><span class="n">8.1</span><span class="t">Representación de números en punto flotante</span></div></li>
+              <li><div class="row"><span class="n">8.2</span><span class="t">Implementación de algoritmos</span></div></li>
+              <li><div class="row"><span class="n">8.3</span><span class="t">Pruebas y validación frente a una referencia</span></div></li>
+              <li><div class="row"><span class="n">8.4</span><span class="t">Aplicaciones en ingeniería de sistemas: procesamiento de datos y simulación</span></div></li>
+            </ol>
+          </details>
+        </div>
+        <p class="no-results" id="no-results">No hay temas que coincidan con tu búsqueda.</p>
+      </div>
+    </section>
+
+    <!-- Metodología -->
+    <section class="section-alt" id="incluye">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><i class="fa-solid fa-layer-group" aria-hidden="true"></i> Qué incluye</p>
+          <h2>Una plataforma para practicar, no solo para leer</h2>
+          <p>Cada módulo sigue el mismo recorrido y guarda tu avance en tu navegador.</p>
+        </div>
+
+        <div class="feat-grid">
+          <article class="feat reveal"><span class="ico"><i class="fa-solid fa-calculator"></i></span><h3>Calculadoras con datos de ejemplo</h3><p>Ya vienen completadas: cámbialas y observa tablas y gráficas al instante.</p></article>
+          <article class="feat reveal"><span class="ico"><i class="fa-solid fa-shuffle"></i></span><h3>Preguntas distintas cada vez</h3><p>Los datos y las alternativas se generan al azar, siempre con una respuesta correcta.</p></article>
+          <article class="feat reveal"><span class="ico"><i class="fa-solid fa-lightbulb"></i></span><h3>Cada error se explica</h3><p>Si fallas, ves por qué la opción era incorrecta y cómo se llega a la respuesta.</p></article>
+          <article class="feat reveal"><span class="ico"><i class="fa-solid fa-circle-check"></i></span><h3>Progreso con checks verdes</h3><p>Las secciones se marcan al aprobar su evaluación y el avance se conserva.</p></article>
+          <article class="feat reveal"><span class="ico"><i class="fa-solid fa-moon"></i></span><h3>Modo oscuro y móvil</h3><p>Diseño responsivo, con tema claro u oscuro para estudiar a cualquier hora.</p></article>
+          <article class="feat reveal"><span class="ico"><i class="fa-brands fa-python"></i></span><h3>Código en Python</h3><p>Cada algoritmo incluye su implementación para llevarla a tus prácticas.</p></article>
+        </div>
+        <ol class="steps">
+          <li class="step">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-book-open"></i></span>
+            <h3>Teoría breve</h3>
+            <p>La idea del método, su interpretación gráfica y de dónde sale la fórmula.</p>
+          </li>
+          <li class="step">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-pen-to-square"></i></span>
+            <h3>Ejemplo resuelto</h3>
+            <p>Paso a paso, con cada iteración, su error y el criterio de parada.</p>
+          </li>
+          <li class="step">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-calculator"></i></span>
+            <h3>Calculadora interactiva</h3>
+            <p>Ejecuta el método con tus propios datos y observa tablas y gráficos.</p>
+          </li>
+          <li class="step">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-list-check"></i></span>
+            <h3>Ejercicios aplicados</h3>
+            <p>Problemas de Ingeniería de Sistemas con retroalimentación.</p>
+          </li>
+          <li class="step">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-circle-check"></i></span>
+            <h3>Autoevaluación</h3>
+            <p>Comprueba lo aprendido antes de pasar al siguiente tema.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- Aplicaciones -->
+    <section id="aplicaciones">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> Aplicaciones</p>
+          <h2>Dónde los usarás en Ingeniería de Sistemas</h2>
+          <p>Cada problema real se apoya en uno o más capítulos del curso.</p>
+        </div>
+        <div class="apps">
+          <article class="app">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-network-wired"></i></span>
+            <div>
+              <h3>Redes y flujos</h3>
+              <p>Balance de flujo en redes, circuitos y sistemas de nodos que se resuelven como sistemas lineales.</p>
+              <div class="tags"><a class="tag" href="#cap-3">Cap. 3</a></div>
+            </div>
+          </article>
+          <article class="app">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-database"></i></span>
+            <div>
+              <h3>Análisis de datos</h3>
+              <p>Ajuste de modelos a mediciones, regresión y reducción de dimensión con SVD.</p>
+              <div class="tags"><a class="tag" href="#cap-3">Cap. 3</a><a class="tag" href="#cap-4">Cap. 4</a></div>
+            </div>
+          </article>
+          <article class="app">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-gears"></i></span>
+            <div>
+              <h3>Simulación de sistemas</h3>
+              <p>Modelos dinámicos de colas, procesos y control descritos con ecuaciones diferenciales.</p>
+              <div class="tags"><a class="tag" href="#cap-6">Cap. 6</a></div>
+            </div>
+          </article>
+          <article class="app">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-sliders"></i></span>
+            <div>
+              <h3>Optimización de recursos</h3>
+              <p>Asignación de recursos, planificación y entrenamiento de modelos.</p>
+              <div class="tags"><a class="tag" href="#cap-7">Cap. 7</a></div>
+            </div>
+          </article>
+          <article class="app">
+            <span class="ico" aria-hidden="true"><i class="fa-solid fa-code"></i></span>
+            <div>
+              <h3>Software numérico confiable</h3>
+              <p>Implementar algoritmos, controlar el error de redondeo y validar resultados con pruebas.</p>
+              <div class="tags"><a class="tag" href="#cap-1">Cap. 1</a><a class="tag" href="#cap-8">Cap. 8</a></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Para quién -->
+    <section class="section-alt" id="publico">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><i class="fa-solid fa-user-graduate" aria-hidden="true"></i> Para quién</p>
+          <h2>Para quién es y qué lograrás</h2>
+          <p>Un portal para estudiantes de Métodos Numéricos de la UNSA y para quien aprende por su cuenta. Todo funciona en el navegador, sin instalar nada.</p>
+        </div>
+        <div class="cards-3">
+          <article class="info">
+            <h3><i class="fa-solid fa-bullseye" aria-hidden="true"></i> Objetivo</h3>
+            <p>Estudiar métodos numéricos, ejecutar algoritmos, observar sus resultados y comprobar su precisión con problemas de Ingeniería de Sistemas.</p>
+          </article>
+          <article class="info">
+            <h3><i class="fa-solid fa-user-graduate" aria-hidden="true"></i> Para quién</h3>
+            <ul>
+              <li>Estudiantes de Métodos Numéricos de la UNSA.</li>
+              <li>Autodidactas con conocimientos básicos de programación, funciones, álgebra lineal y cálculo.</li>
+            </ul>
+          </article>
+          <article class="info">
+            <h3><i class="fa-solid fa-list-check" aria-hidden="true"></i> Resultados de aprendizaje</h3>
+            <ul>
+              <li>Formular un problema, identificar variables, unidades y supuestos, y justificar el método.</li>
+              <li>Implementar algoritmos con criterios de parada y analizar el error.</li>
+              <li>Contrastar resultados con una referencia independiente.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Equipo -->
+    <section id="equipo">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><i class="fa-solid fa-users" aria-hidden="true"></i> Equipo</p>
+          <h2>Equipo de desarrollo</h2>
+          <p>Laboratorio de Métodos Numéricos · Ingeniería de Sistemas · UNSA.</p>
+        </div>
+        <ul class="team">
+          <li class="member"><span class="avatar" aria-hidden="true">RC</span><div><b>Condori Idme Raul Wilfredo</b><span>Integrante A</span></div></li>
+          <li class="member"><span class="avatar" aria-hidden="true">FQ</span><div><b>Quispe Rupaylla Fabrizio Alonso</b><span>Integrante B</span></div></li>
+          <li class="member"><span class="avatar" aria-hidden="true">MS</span><div><b>Suarez Huamani Marco Antonio</b><span>Integrante C</span></div></li>
+          <li class="member"><span class="avatar" aria-hidden="true">DC</span><div><b>Chura Monroy Daniel Wilston</b><span>Integrante D</span></div></li>
+        </ul>
+        <p class="team-note">Los roles del equipo rotan cada tres semanas.</p>
+
+        <div class="cta" style="margin-top:56px">
+          <div>
+            <h2>Empieza por el error, termina optimizando</h2>
+            <p>Empieza el Módulo 1 hoy y revisa en el temario lo que viene después.</p>
+          </div>
+          <a class="btn btn-primary" href="modulo-1/index.html">Ir al Módulo 1 <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a class="brand" href="#inicio">
+            <span class="brand-mark" aria-hidden="true"><i class="fa-solid fa-wave-square"></i></span>
+            <span class="brand-text"><strong>ITERA</strong><small>Laboratorio de Métodos Numéricos</small></span>
+          </a>
+          <p class="footer-about">Ruta de aprendizaje de Métodos Numéricos para Ingeniería de Sistemas: teoría, ejemplos resueltos y práctica en el navegador.</p>
+        </div>
+        <div>
+          <h3>Portal</h3>
+          <ul>
+            <li><a href="#ruta">Ruta de aprendizaje</a></li>
+            <li><a href="#temario">Temario</a></li>
+            <li><a href="modulo-1/index.html">Módulo 1: Errores</a></li>
+            <li><a href="#incluye">Qué incluye</a></li>
+            <li><a href="#equipo">Equipo</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Proyecto</h3>
+          <ul>
+            <li><a href="https://github.com/Suarezsh/itera-learn" target="_blank" rel="noopener"><i class="fa-brands fa-github" aria-hidden="true"></i> Repositorio</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>UNSA · Ingeniería de Sistemas · Laboratorio de Métodos Numéricos</span>
+        <span>© 2026 ITERA Learn</span>
+      </div>
+    </div>
+  </footer>
+  <button class="to-top" id="to-top" type="button" aria-label="Volver arriba"><i class="fa-solid fa-arrow-up" aria-hidden="true"></i></button>
+
+  <script>
+    (function () {
+
+      // Tema
+      const themeBtn = document.getElementById("theme-btn");
+      const root = document.documentElement;
+      function applyTheme(t) {
+        root.setAttribute("data-theme", t);
+        themeBtn.innerHTML = '<i class="fa-solid fa-' + (t === "dark" ? "sun" : "moon") + '" aria-hidden="true"></i>';
+      }
+      let saved = null;
+      try { saved = localStorage.getItem("itera-theme"); } catch (e) {}
+      applyTheme(saved || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
+      themeBtn.addEventListener("click", () => {
+        const t = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+        applyTheme(t);
+        try { localStorage.setItem("itera-theme", t); } catch (e) {}
+      });
+
+      // Barra de scroll y botón subir
+      const bar = document.getElementById("scroll-bar");
+      const toTop = document.getElementById("to-top");
+      function onScroll() {
+        const h = document.documentElement.scrollHeight - innerHeight;
+        bar.style.width = (h > 0 ? scrollY / h * 100 : 0) + "%";
+        toTop.classList.toggle("show", scrollY > 600);
+      }
+      addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+      toTop.addEventListener("click", () => scrollTo({ top: 0, behavior: "smooth" }));
+
+      // Aparición al hacer scroll
+      const rev = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); rev.unobserve(e.target); } }), { threshold: .12 });
+      document.querySelectorAll(".reveal").forEach(el => rev.observe(el));
+
+      // Progreso del Módulo 1
+      let st = {};
+      try { st = JSON.parse(localStorage.getItem("itera-m1") || "{}"); } catch (e) {}
+      const TOTAL = 8;
+      const doneIds = [];
+      for (let i = 1; i <= TOTAL; i++) if (st["s" + i + "_done"]) doneIds.push(i);
+      const pct = Math.round(doneIds.length / TOTAL * 100);
+      document.getElementById("pp-ring").style.setProperty("--p", pct);
+      document.getElementById("pp-pct").textContent = pct + "%";
+      document.getElementById("card-bar-fill").style.width = pct + "%";
+      document.getElementById("card-bar-text").textContent = doneIds.length ? doneIds.length + " de " + TOTAL + " secciones" : "Sin empezar";
+      const dots = document.getElementById("pp-dots");
+      for (let i = 1; i <= TOTAL; i++) {
+        const s = document.createElement("span");
+        const ok = doneIds.includes(i);
+        s.textContent = ok ? "\u2713" : i;
+        if (ok) s.classList.add("ok");
+        dots.appendChild(s);
+      }
+      if (doneIds.length) {
+        document.getElementById("pp-sub").textContent = doneIds.length >= TOTAL ? "Completaste todas las secciones. Te queda el examen final." : "Llevas " + doneIds.length + " de " + TOTAL + " secciones aprobadas. Sigue donde lo dejaste.";
+        document.querySelector("#pp-btn span").textContent = "Continuar";
+        document.querySelector("#hero-cta span").textContent = "Continuar el Módulo 1 (" + pct + "%)";
+        document.getElementById("header-cta").textContent = "Continuar (" + pct + "%)";
+      }
+
+      // Menú lateral en pantallas pequeñas
+      const nav = document.getElementById("site-nav");
+      const toggle = document.querySelector(".menu-toggle");
+      const backdrop = document.querySelector(".nav-backdrop");
+      const closeBtn = nav.querySelector(".nav-close");
+
+      function setNav(open) {
+        nav.classList.toggle("open", open);
+        backdrop.classList.toggle("show", open);
+        document.body.classList.toggle("nav-open", open);
+        toggle.setAttribute("aria-expanded", String(open));
+        if (open) closeBtn.focus();
+      }
+      toggle.addEventListener("click", () => setNav(true));
+      closeBtn.addEventListener("click", () => { setNav(false); toggle.focus(); });
+      backdrop.addEventListener("click", () => setNav(false));
+      nav.querySelectorAll("a").forEach(a => a.addEventListener("click", () => setNav(false)));
+      document.addEventListener("keydown", e => { if (e.key === "Escape" && nav.classList.contains("open")) { setNav(false); toggle.focus(); } });
+      matchMedia("(min-width: 1180px)").addEventListener("change", e => { if (e.matches) setNav(false); });
+
+      // Enlace activo según la sección visible
+      const links = [...nav.querySelectorAll('a[href^="#"]')];
+      const byId = new Map(links.map(a => [a.getAttribute("href").slice(1), a]));
+      const spy = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting) return;
+          links.forEach(a => a.removeAttribute("aria-current"));
+          const link = byId.get(entry.target.id);
+          if (link) link.setAttribute("aria-current", "true");
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      document.querySelectorAll("main section[id]").forEach(s => spy.observe(s));
+
+      // Temario: abrir el capítulo enlazado
+      const chapters = [...document.querySelectorAll("#syllabus details.chapter")];
+      function openChapter(id) {
+        const el = document.getElementById(id);
+        if (el && el.tagName === "DETAILS") el.open = true;
+      }
+      document.querySelectorAll('a[href^="#cap-"]').forEach(a => {
+        a.addEventListener("click", () => openChapter(a.getAttribute("href").slice(1)));
+      });
+      window.addEventListener("hashchange", () => openChapter(location.hash.slice(1)));
+      if (location.hash) openChapter(location.hash.slice(1));
+
+      // Conteo real de secciones y temas
+      const sectionCount = document.querySelectorAll("#syllabus .sections > li").length - 1;
+      const topicCount = document.querySelectorAll("#syllabus .row .n").length;
+      document.querySelector('[data-count="sections"]').textContent = sectionCount;
+      document.querySelector('[data-count="topics"]').textContent = topicCount;
+
+      // Expandir o contraer todo
+      const toggleAll = document.getElementById("toggle-all");
+      const toggleLabel = toggleAll.querySelector("span");
+      function syncToggleAll() {
+        const allOpen = chapters.every(d => d.open || d.classList.contains("is-hidden"));
+        toggleAll.setAttribute("aria-pressed", String(allOpen));
+        toggleLabel.textContent = allOpen ? "Contraer todo" : "Expandir todo";
+      }
+      toggleAll.addEventListener("click", () => {
+        const open = toggleAll.getAttribute("aria-pressed") !== "true";
+        chapters.forEach(d => { d.open = open; });
+        syncToggleAll();
+      });
+      chapters.forEach(d => d.addEventListener("toggle", syncToggleAll));
+
+      // Búsqueda en el temario
+      const search = document.getElementById("topic-search");
+      const results = document.getElementById("search-results");
+      const noResults = document.getElementById("no-results");
+      const fold = s => s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+      const escapeHtml = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      const titles = [...document.querySelectorAll("#syllabus .t:not([data-keep]), #syllabus .ch-title")];
+      titles.forEach(t => { t.dataset.text = t.textContent; });
+
+      // Coincidencia al inicio de una palabra: "lu" encuentra "LU", no "absoluto"
+      function wordIndex(text, q) {
+        const folded = fold(text);
+        for (let i = folded.indexOf(q); i >= 0; i = folded.indexOf(q, i + 1)) {
+          if (i === 0 || !/[a-z0-9]/.test(folded[i - 1])) return i;
+        }
+        return -1;
+      }
+
+      function highlight(el, q) {
+        const text = el.dataset.text;
+        const i = q ? wordIndex(text, q) : -1;
+        el.innerHTML = i < 0 ? escapeHtml(text)
+          : escapeHtml(text.slice(0, i)) + "<mark>" + escapeHtml(text.slice(i, i + q.length)) + "</mark>" + escapeHtml(text.slice(i + q.length));
+        return i >= 0;
+      }
+
+      function runSearch() {
+        const q = fold(search.value.trim());
+        let matches = 0;
+        chapters.forEach(ch => {
+          const chapterHit = highlight(ch.querySelector(".ch-title"), q);
+          let chapterHasMatch = chapterHit;
+          ch.querySelectorAll(".sections > li").forEach(sec => {
+            const secEl = sec.querySelector(":scope > .row .t");
+            if (secEl.hasAttribute("data-keep")) { sec.classList.toggle("is-hidden", !!q); return; }
+            const secHit = highlight(secEl, q);
+            let subHit = false;
+            sec.querySelectorAll(".subs > li").forEach(sub => {
+              const hit = highlight(sub.querySelector(".t"), q);
+              if (hit) { subHit = true; matches++; }
+              sub.classList.toggle("is-hidden", !!q && !hit && !secHit && !chapterHit);
+            });
+            if (secHit) matches++;
+            sec.classList.toggle("is-hidden", !!q && !secHit && !subHit && !chapterHit);
+            if (secHit || subHit) chapterHasMatch = true;
+          });
+          ch.classList.toggle("is-hidden", !!q && !chapterHasMatch);
+          if (q) ch.open = chapterHasMatch;
+        });
+        if (!q) {
+          results.textContent = "";
+          chapters.forEach(ch => { ch.open = false; });
+        } else if (matches === 0) {
+          results.textContent = "";
+        } else {
+          results.textContent = matches === 1 ? "1 tema encontrado" : matches + " temas encontrados";
+        }
+        noResults.classList.toggle("show", !!q && chapters.every(ch => ch.classList.contains("is-hidden")));
+        syncToggleAll();
+      }
+      search.addEventListener("input", runSearch);
+    })();
+  </script>
+  <script>
+    (function () {
+      const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      // Escena: en pantallas estrechas se recorta a los personajes
+      const scene = document.querySelector(".scene");
+      function fitScene() { scene.setAttribute("viewBox", innerWidth < 700 ? "380 70 580 290" : "0 0 960 380"); }
+      fitScene();
+      addEventListener("resize", fitScene);
+
+      // Demo Newton: filas y barras en secuencia
+      const demo = document.querySelector(".demo-card");
+      demo.querySelectorAll("tbody tr").forEach((r, i) => r.style.setProperty("--i", i));
+      demo.querySelectorAll(".digits-chart .bar").forEach((b, i) => b.style.setProperty("--i", i));
+      demo.classList.add("play");
+
+      // Palabra rotatoria del titular
+      const em = document.querySelector(".hero h1 em");
+      if (em && !still) {
+        const words = ["clara y aplicada", "interactiva", "paso a paso", "práctica"];
+        let k = 0;
+        setInterval(() => {
+          em.classList.add("swap");
+          setTimeout(() => { k = (k + 1) % words.length; em.textContent = words[k]; em.classList.remove("swap"); }, 350);
+        }, 3200);
+      }
+
+      // Contadores
+      function count(el) {
+        const end = parseInt(el.textContent, 10);
+        if (isNaN(end) || still) return;
+        const t0 = performance.now(), dur = 1400;
+        (function tick(t) {
+          const p = Math.min((t - t0) / dur, 1);
+          el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
+          if (p < 1) requestAnimationFrame(tick);
+        })(t0);
+      }
+      document.querySelectorAll(".hero-stats b").forEach(b => setTimeout(() => count(b), 700));
+
+      // Anillo de progreso animado
+      const ring = document.getElementById("pp-ring");
+      const target = parseFloat(ring.style.getPropertyValue("--p")) || 0;
+      const pctEl = document.getElementById("pp-pct");
+      ring.style.setProperty("--p", 0);
+      pctEl.textContent = "0%";
+      document.querySelectorAll("#pp-dots span").forEach((s, i) => s.style.setProperty("--i", i));
+      const ringObs = new IntersectionObserver(es => {
+        if (!es[0].isIntersecting) return;
+        ringObs.disconnect();
+        const t0 = performance.now();
+        (function tick(t) {
+          const p = Math.min((t - t0) / 1200, 1), v = target * (1 - Math.pow(1 - p, 3));
+          ring.style.setProperty("--p", v);
+          pctEl.textContent = Math.round(v) + "%";
+          if (p < 1) requestAnimationFrame(tick);
+        })(t0);
+      }, { threshold: .4 });
+      ringObs.observe(ring);
+
+      // Retardos escalonados en rejillas
+      document.querySelectorAll(".chapter-grid,.feat-grid,.apps,.steps,.team,.cards-3").forEach(g => {
+        [...g.children].forEach((c, i) => { c.classList.add("reveal", "d" + Math.min(i % 4, 3)); });
+      });
+      const rev2 = new IntersectionObserver(es => es.forEach(e => {
+        if (!e.isIntersecting) return;
+        const el = e.target;
+        el.classList.add("in");
+        rev2.unobserve(el);
+        setTimeout(() => el.classList.remove("reveal", "in", "d0", "d1", "d2", "d3"), 1000);
+      }), { threshold: .12 });
+      document.querySelectorAll(".reveal:not(.in)").forEach(el => rev2.observe(el));
+      document.querySelectorAll(".section-head").forEach(el => { el.classList.add("reveal"); rev2.observe(el); });
+
+      // Botones: ondas y efecto magnético
+      document.querySelectorAll(".btn-primary,.card-cta").forEach(b => {
+        b.addEventListener("pointerdown", e => {
+          const r = b.getBoundingClientRect(), s = Math.max(r.width, r.height);
+          const d = document.createElement("span");
+          d.className = "ripple";
+          d.style.cssText = "width:" + s + "px;height:" + s + "px;left:" + (e.clientX - r.left - s / 2) + "px;top:" + (e.clientY - r.top - s / 2) + "px";
+          b.appendChild(d);
+          setTimeout(() => d.remove(), 650);
+        });
+        if (still) return;
+        b.addEventListener("pointermove", e => {
+          const r = b.getBoundingClientRect();
+          b.style.transform = "translate(" + ((e.clientX - r.left - r.width / 2) * .12) + "px," + ((e.clientY - r.top - r.height / 2) * .2) + "px)";
+        });
+        b.addEventListener("pointerleave", () => { b.style.transform = ""; });
+      });
+
+      // Inclinación 3D en tarjetas de módulos
+      if (!still && matchMedia("(hover:hover)").matches) {
+        document.querySelectorAll(".chapter-card").forEach(c => {
+          c.addEventListener("pointermove", e => {
+            const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+            c.style.transform = "perspective(700px) rotateX(" + (-y * 7) + "deg) rotateY(" + (x * 9) + "deg) translateY(-3px)";
+          });
+          c.addEventListener("pointerleave", () => { c.style.transform = ""; });
+        });
+      }
+
+      // Parallax suave de símbolos
+      if (!still) {
+        const syms = document.querySelectorAll(".sym");
+        addEventListener("scroll", () => {
+          const y = scrollY;
+          if (y > 900) return;
+          syms.forEach((s, i) => { s.style.marginTop = (-y * (.05 + i * .02)) + "px"; });
+        }, { passive: true });
+      }
+
+      // Aviso al pulsar las tarjetas bloqueadas
+      const toast = document.createElement("div");
+      toast.className = "tip-toast";
+      document.body.appendChild(toast);
+      let tt;
+      document.querySelectorAll(".chapter-card.soon").forEach(c => {
+        c.style.cursor = "pointer";
+        c.addEventListener("click", () => {
+          toast.textContent = "Este módulo se publicará pronto. Empieza por el Módulo 1: Errores.";
+          toast.classList.add("show");
+          clearTimeout(tt);
+          tt = setTimeout(() => toast.classList.remove("show"), 2800);
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
