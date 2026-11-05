@@ -1267,10 +1267,10 @@ function applyTheme() {
 // ═══════════════════════════════════════════════════════
 // PROGRESO
 // ═══════════════════════════════════════════════════════
-const PREVIEW_ALL_TOPICS_COMPLETE = location.protocol === 'file:' || ['localhost', '127.0.0.1'].includes(location.hostname);
+const INITIAL_COMPLETED_TOPICS = 4;
 
 function isTopicComplete(sid) {
-  return PREVIEW_ALL_TOPICS_COMPLETE || Boolean(state[sid + '_done']);
+  return SECTIONS.indexOf(sid) < INITIAL_COMPLETED_TOPICS || Boolean(state[sid + '_done']);
 }
 
 function updateProgress() {
