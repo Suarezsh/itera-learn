@@ -1266,7 +1266,7 @@
       try { st = JSON.parse(localStorage.getItem("itera-m1") || "{}"); } catch (e) {}
       const TOTAL = 8;
       const doneIds = [];
-      for (let i = 1; i <= TOTAL; i++) if (st["s" + i + "_done"]) doneIds.push(i);
+      for (let i = 1; i <= TOTAL; i++) if (i <= 4 || st["s" + i + "_done"]) doneIds.push(i);
       const pct = Math.round(doneIds.length / TOTAL * 100);
       document.getElementById("pp-ring").style.setProperty("--p", pct);
       document.getElementById("pp-pct").textContent = pct + "%";
