@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 428" role="img" aria-labelledby="title description">
+  <title id="title">Cómo disminuye el error</title>
+  <desc id="description">Ejemplo de convergencia lineal. Desde la iteración cero hasta la quinta, el error pasa por 1, 0.5, 0.25, 0.125, 0.0625 y 0.03125.</desc>
+  <defs>
+    <linearGradient id="area" x2="0" y2="1">
+      <stop stop-color="#fb8a5a" stop-opacity=".27"/>
+      <stop offset="1" stop-color="#fb8a5a" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <style>
+    .trace { stroke-dasharray: 1; animation: trace 2s ease-out forwards; }
+    .last { transform-origin: 1030px 321.75px; animation: settle 600ms 1.65s ease-out both; }
+    @keyframes trace { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+    @keyframes settle { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+    @media (prefers-reduced-motion: reduce) {
+      .trace { animation: none; stroke-dashoffset: 0; }
+      .last { animation: none; }
+    }
+  </style>
+
+  <rect x="1" y="1" width="1118" height="426" rx="24" fill="#14212e"/>
+  <path d="M392 46v336" stroke="#3b4a5a"/>
+  <g font-family="system-ui, sans-serif">
+    <text x="50" y="76" fill="#fb9c74" font-size="19" font-weight="650">ITERA Learn</text>
+    <text x="50" y="133" fill="#fbfaf7" font-size="38" font-weight="750">Cómo disminuye</text>
+    <text x="50" y="177" fill="#fbfaf7" font-size="38" font-weight="750">el error</text>
+    <text x="50" y="225" fill="#c8d3dd" font-size="18">En este ejemplo, cada iteración</text>
+    <text x="50" y="251" fill="#c8d3dd" font-size="18">reduce el error a la mitad.</text>
+    <rect x="50" y="292" width="285" height="66" rx="12" fill="#202f3d"/>
+    <text x="68" y="333" fill="#fbfaf7" font-size="20" font-weight="650">|e₅| = 1/32 del error inicial</text>
+
+    <text x="490" y="65" fill="#fbfaf7" font-size="19" font-weight="700">Convergencia lineal</text>
+    <text x="490" y="90" fill="#c8d3dd" font-size="14">Magnitud del error</text>
+    <path d="M490 104h540m-540 56h540m-540 56h540m-540 56h540m-540 56h540" fill="none" stroke="#3b4a5a"/>
+    <path d="M490 104v224h540" fill="none" stroke="#74899b"/>
+    <g fill="#c8d3dd" font-size="14" text-anchor="end">
+      <text x="477" y="109">1.00</text>
+      <text x="477" y="165">0.75</text>
+      <text x="477" y="221">0.50</text>
+      <text x="477" y="277">0.25</text>
+      <text x="477" y="333">0</text>
+    </g>
+    <path d="M490 104 598 216 706 272 814 300 922 314 1030 321 1030 328H490Z" fill="url(#area)"/>
+    <path class="trace" pathLength="1" d="M490 104 598 216 706 272 814 300 922 314 1030 321" fill="none" stroke="#fb9c74" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>
+    <g fill="#fb9c74">
+      <circle cx="490" cy="104" r="4"/><circle cx="598" cy="216" r="4"/>
+      <circle cx="706" cy="272" r="4"/><circle cx="814" cy="300" r="4"/>
+      <circle cx="922" cy="314" r="4"/><circle class="last" cx="1030" cy="321" r="7"/>
+    </g>
+    <g fill="#c8d3dd" font-size="14" text-anchor="middle">
+      <text x="490" y="354">0</text><text x="598" y="354">1</text>
+      <text x="706" y="354">2</text><text x="814" y="354">3</text>
+      <text x="922" y="354">4</text><text x="1030" y="354">5</text>
+      <text x="760" y="384">Iteración</text>
+    </g>
+  </g>
+</svg>
